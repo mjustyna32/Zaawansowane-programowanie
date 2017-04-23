@@ -151,8 +151,9 @@ namespace Zaawansowane_programowanie
 
             AddElementsToChild(ind1Child, ind1ColumnsPerm, ind1SwapPart, ind2SwapPart);
             AddElementsToChild(ind2Child, ind2ColumnsPerm, ind2SwapPart, ind1SwapPart);
-
-            //DODAĆ SWAPY
+            //Wstawia bloki wymiany
+            InsertSwap(ind1Child, ind2SwapPart, commonPartPosition);
+            InsertSwap(ind2Child, ind1SwapPart, commonPartPosition);
         }
 
         private void AddElementsToChild(List<int> child,List<int> parent1, List<int> parent1Swap, List<int> parent2Swap)
@@ -169,6 +170,14 @@ namespace Zaawansowane_programowanie
                 {
                     child.Add(column);
                 }
+            }
+        }
+
+        private void InsertSwap(List<int> child, List<int> swapPart, int commonPartPosition)
+        {
+            for(int i=0; i<swapPart.Count; i++)
+            {
+                child.Insert(commonPartPosition + i, swapPart.ElementAt(i));
             }
         }
 
