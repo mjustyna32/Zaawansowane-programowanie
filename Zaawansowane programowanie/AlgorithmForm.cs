@@ -151,9 +151,15 @@ namespace Zaawansowane_programowanie
 
             foreach (int column in ind1ColumnsPerm)
             {
-                if (ind2SwapPart.Contains(column))
+                if (ind2SwapPart.Contains(column)) //jeżeli dodawany element znajduje się już we fragmencie, który uległ wymianie
                 {
-
+                    int exchageElement = ind2SwapPart.IndexOf(column);
+                    exchageElement = ind1SwapPart.ElementAt(exchageElement);
+                    ind1Child.Add(exchageElement);
+                }
+                else
+                {
+                    ind1Child.Add(column);
                 }
             }
         }
