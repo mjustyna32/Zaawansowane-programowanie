@@ -149,17 +149,25 @@ namespace Zaawansowane_programowanie
             List<int> ind1SwapPart = ind1ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
             List<int> ind2SwapPart = ind2ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
 
-            foreach (int column in ind1ColumnsPerm)
+            AddElementsToChild(ind1Child, ind1ColumnsPerm, ind1SwapPart, ind2SwapPart);
+            AddElementsToChild(ind2Child, ind2ColumnsPerm, ind2SwapPart, ind1SwapPart);
+
+            //DODAĆ SWAPY
+        }
+
+        private void AddElementsToChild(List<int> child,List<int> parent1, List<int> parent1Swap, List<int> parent2Swap)
+        {
+            foreach (int column in parent1)
             {
-                if (ind2SwapPart.Contains(column)) //jeżeli dodawany element znajduje się już we fragmencie, który uległ wymianie
+                if (parent2Swap.Contains(column)) //jeżeli dodawany element znajduje się już we fragmencie, który uległ wymianie
                 {
-                    int exchageElement = ind2SwapPart.IndexOf(column);
-                    exchageElement = ind1SwapPart.ElementAt(exchageElement);
-                    ind1Child.Add(exchageElement);
+                    int exchageElement = parent2Swap.IndexOf(column);
+                    exchageElement = parent1Swap.ElementAt(exchageElement);
+                    child.Add(exchageElement);
                 }
                 else
                 {
-                    ind1Child.Add(column);
+                    child.Add(column);
                 }
             }
         }
