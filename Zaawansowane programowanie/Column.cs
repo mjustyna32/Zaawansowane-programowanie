@@ -9,14 +9,22 @@ namespace Zaawansowane_programowanie
     public class Column
     {
         private List<bool> rows;
+        private int columnIndex;
+
         public List<bool> GetRows 
         {
             set { }
             get { return rows; }
 
         }
-        private int columnIndex;
-
+        public int GetRowsCount
+        {
+            get { return rows.Count; }
+        }
+        public bool getRowValueAt(int index)
+        {
+            return rows.ElementAt(index);
+        }
         public int ColumnIndex
         {
             get { return columnIndex; }

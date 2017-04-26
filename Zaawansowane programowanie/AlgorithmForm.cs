@@ -21,9 +21,12 @@ namespace Zaawansowane_programowanie
         private int crossingSizeFactor = 4;
         private float bestIndividualParticipanceFactor = (float) 0.1;
         private float crossingIntervalFactor =(float) 0.5;
+        private float mutationCountFactor = (float)0.2;
+        private float mutationPowerFactor = (float)0.2;
+        private Individual bestIndividual = null;
 
         //Deprecated
-        public List<Column> ColumnTable
+        public List<Column> GetColumnTable
         {
             get { return allInstanceColumns; }
         }
@@ -47,7 +50,8 @@ namespace Zaawansowane_programowanie
             populationOfSolutions = new List<Individual>();
             currentThread = currThread;
         }
-        public static List<int> GetColumnsIndexes(List<Column> columns)
+
+        public List<int> GetColumnsIndexes(List<Column> columns)
         {
             List<int> indexesList = new List<int>();
             foreach(Column col in columns)
@@ -56,7 +60,7 @@ namespace Zaawansowane_programowanie
             }
             return indexesList;
         }
-        public static List<Column> CloneColumnsList(List<Column> source)
+        public List<Column> CloneColumnsList(List<Column> source)
         {
             List<Column> clonedList = new List<Column>();
             foreach(Column col in source)
@@ -68,7 +72,7 @@ namespace Zaawansowane_programowanie
             return clonedList;
         }
 
-        public static List<int> CloneIndexesList(List<int> source)
+        public List<int> CloneIndexesList(List<int> source)
         {
             List<int> outList = new List<int>();
             foreach(int value in source)
@@ -87,13 +91,66 @@ namespace Zaawansowane_programowanie
             for(int i=0; i<iterations; i++)
             {
                 //krzyzowanie
-                //Crossing();
+                populationOfSolutions = Crossing();
                 //selekcja
-                //Selection();
-                //mutacja / "cykl zagłady"
-                //InsertMutations();
-                ;
+                populationOfSolutions = Selection();
+                bestIndividual = GetBestIndividual();
+                //mutacja / "cykl zagłady" //DODAC CYKLE ZAGLADY
+                InsertMutations();
+                
             }
+        }
+
+        private Individual GetBestIndividual()
+        {
+            Individual bestFound = populationOfSolutions.ElementAt(0);
+            bestFound.CheckSolution();
+            foreach(Individual i in populationOfSolutions){ //do optymalizacji
+                if (i.CheckSolution() < bestFound.SolutionValue)
+                {
+                    bestFound = i;
+                }
+            }
+            return bestFound;
+        }
+
+        private void InsertMutations()
+        {
+            Random rand = new Random();
+            int individualMutationCount = Convert.ToInt32(populationOfSolutions.Count * mutationCountFactor);
+            for (int i = 0; i < individualMutationCount; i++)
+            {
+                int individualIndex = rand.Next(populationOfSolutions.Count);
+                populationOfSolutions.ElementAt(individualIndex).Mutate(mutationPowerFactor);
+            }
+
+        }
+
+        private List<Individual> Selection()
+        {
+            List<Individual> afterSelection = new List<Individual>();
+            int outSize = populationOfSolutions.Count / crossingSizeFactor;
+            while (afterSelection.Count < outSize)
+            {
+                TournamentSelection(ref afterSelection, outSize);
+            }
+            return afterSelection;
+        }
+
+        private void TournamentSelection(ref List<Individual> afterSelection, int outSize)
+        {
+            CollectionActions.Shuffle(populationOfSolutions); //zmniejszamy ryzyko wylosowania dwa razy tych samych
+            for(int i=0; i<populationOfSolutions.Count-2 && afterSelection.Count < outSize; i+=2) //porównujemy pary
+            {
+                afterSelection.Add(GetSelectedIndividual(i, i+1));
+            }
+        }
+
+        private Individual GetSelectedIndividual(int index1, int index2)
+        {
+            Individual ind1 = populationOfSolutions.ElementAt(index1);
+            Individual ind2 = populationOfSolutions.ElementAt(index2);
+            return ind1.CheckSolution() <= ind2.CheckSolution() ? ind1 : ind2;
         }
 
         private void PrepareBasicPopulation()
@@ -107,7 +164,7 @@ namespace Zaawansowane_programowanie
             }
         }
 
-        private void Crossing()
+        private List<Individual> Crossing()
         {
             //TODO
             //obliczyć średnią wartość dla wszystkich osobników (??)
@@ -122,22 +179,32 @@ namespace Zaawansowane_programowanie
             int averageValue = getAverageIndividualValue();
             int outPopulationSize = populationOfSolutions.Count * crossingSizeFactor;
             int bestIndCount = Convert.ToInt32(outPopulationSize * bestIndividualParticipanceFactor);
+
             //zabezpieczyc na wypadek gdyby bylo zbyt malo ponizej sredniej
-            while (afterCorssing.Count < bestIndCount)
+            MakeCrossedPopulation(ref afterCorssing, averageValue, bestIndCount);
+            MakeCrossedPopulation(ref afterCorssing, averageValue*2, outPopulationSize); //*2 zrobic jako parametr
+            return afterCorssing;
+        }
+
+        private List<Individual> MakeCrossedPopulation(ref List<Individual> afterCorssing, int averageValue, int outPopulationThreshold)
+        {
+            Random rand = new Random();
+            while (afterCorssing.Count < outPopulationThreshold)
             {
-                int ind1Index = rand.Next(afterCorssing.Count);
-                int ind2Index = rand.Next(afterCorssing.Count);
+                int ind1Index = rand.Next(populationOfSolutions.Count);
+                int ind2Index = rand.Next(populationOfSolutions.Count);
                 Individual ind1 = populationOfSolutions.ElementAt(ind1Index);
                 Individual ind2 = populationOfSolutions.ElementAt(ind2Index);
                 if ((ind1 != ind2) && (ind1.SolutionValue <= averageValue || ind2.SolutionValue <= averageValue))
                 {
-                    addCrossedPair(ind1, ind2, afterCorssing);
+                    addCrossedPair(ind1, ind2, ref afterCorssing);
                 }
             }
 
+            return afterCorssing;
         }
 
-        private void addCrossedPair(Individual ind1, Individual ind2, List<Individual> afterCorssing)
+        private void addCrossedPair(Individual ind1, Individual ind2, ref List<Individual> afterCorssing)
         {
             Random rand = new Random();
             List<int> ind1ColumnsPerm = ind1.Columns;
@@ -149,14 +216,17 @@ namespace Zaawansowane_programowanie
             List<int> ind1SwapPart = ind1ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
             List<int> ind2SwapPart = ind2ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
 
-            AddElementsToChild(ind1Child, ind1ColumnsPerm, ind1SwapPart, ind2SwapPart);
-            AddElementsToChild(ind2Child, ind2ColumnsPerm, ind2SwapPart, ind1SwapPart);
+            //dodaje te elementy, ktore mialy zostac
+            AddElementsToChild(ref ind1Child, ref ind1ColumnsPerm, ref ind1SwapPart, ref ind2SwapPart);
+            AddElementsToChild(ref ind2Child, ref ind2ColumnsPerm, ref ind2SwapPart, ref ind1SwapPart);
             //Wstawia bloki wymiany
             InsertSwap(ind1Child, ind2SwapPart, commonPartPosition);
             InsertSwap(ind2Child, ind1SwapPart, commonPartPosition);
+            afterCorssing.Add(new Individual(ind1Child, this));
+            afterCorssing.Add(new Individual(ind2Child, this));
         }
 
-        private void AddElementsToChild(List<int> child,List<int> parent1, List<int> parent1Swap, List<int> parent2Swap)
+        private void AddElementsToChild(ref List<int> child,ref List<int> parent1, ref List<int> parent1Swap, ref List<int> parent2Swap)
         {
             foreach (int column in parent1)
             {
@@ -186,9 +256,15 @@ namespace Zaawansowane_programowanie
             int sum = 0;
             foreach(Individual i in populationOfSolutions)
             {
-                sum += i.SolutionValue;
+                sum += i.CheckSolution();
             }
             return sum / populationOfSolutions.Count;
+        }
+
+
+        private void AlgorithmForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+           
         }
     }
 }

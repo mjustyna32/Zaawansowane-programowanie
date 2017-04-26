@@ -75,6 +75,7 @@ namespace Zaawansowane_programowanie
             ThreadStart startingThreadDelegate = new ThreadStart(algorithmForm.RunAlgorithm);
             Thread algorithmThread = new Thread(startingThreadDelegate);
             algorithmForm.Show();
+            algorithmThread.IsBackground = true;
             algorithmThread.Start();
         }
     }
