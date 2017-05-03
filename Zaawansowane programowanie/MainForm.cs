@@ -28,7 +28,8 @@ namespace Zaawansowane_programowanie
                 filePath = openFileDialog1.FileName;
                 StreamReader sr = new StreamReader(filePath);
                 ReadFile(sr);
-
+                labelFileName.Text = filePath;
+                startButton.Enabled = true;
                 sr.Close();
             }
         }
@@ -71,7 +72,11 @@ namespace Zaawansowane_programowanie
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            AlgorithmForm algorithmForm = new AlgorithmForm(allColumns, 5, 5, Thread.CurrentThread);
+            AlgorithmForm algorithmForm = new AlgorithmForm(allColumns, 
+                Convert.ToInt32(numericUpDownIteration.Value), Convert.ToInt32(numericUpDownPopulationSize.Value), 
+                Convert.ToInt32(numericUpDownCrossFactor.Value), Convert.ToInt32(numericUpDownBests.Value), 
+                Convert.ToInt32(numericUpDownCrossInterval.Value), Convert.ToInt32(numericUpDownMutationCount.Value), 
+                Convert.ToInt32(numericUpDownMutationPower.Value), Thread.CurrentThread);
             ThreadStart startingThreadDelegate = new ThreadStart(algorithmForm.RunAlgorithm);
             Thread algorithmThread = new Thread(startingThreadDelegate);
             algorithmForm.Show();

@@ -40,14 +40,19 @@ namespace Zaawansowane_programowanie
         {
             get { return PopulationSize; }
         }
-        public AlgorithmForm(List<Column> columns, int iter, int popSize, Thread currThread )
+        public AlgorithmForm(List<Column> columns, int iter, int popSize, int crossSize, int bestsParticipant,int crossInterval, int mutationCount, int mutationPower,  Thread currThread )
         {
-            iterations = iter;
-            populationSize = popSize;
             InitializeComponent();
             allInstanceColumns = CloneColumnsList(columns);
             columnsIndexes = GetColumnsIndexes(allInstanceColumns);
             populationOfSolutions = new List<Individual>();
+            iterations = iter;
+            populationSize = popSize;
+            crossingSizeFactor = crossSize;
+            bestIndividualParticipanceFactor = bestsParticipant /100;
+            crossingIntervalFactor = crossInterval / 100;
+            mutationCountFactor = mutationCount /100;
+            mutationPowerFactor = mutationPower /100;
             currentThread = currThread;
         }
 
@@ -96,8 +101,7 @@ namespace Zaawansowane_programowanie
                 populationOfSolutions = Selection();
                 bestIndividual = GetBestIndividual();
                 //mutacja / "cykl zagłady" //DODAC CYKLE ZAGLADY
-                InsertMutations();
-                
+                InsertMutations();                
             }
         }
 
