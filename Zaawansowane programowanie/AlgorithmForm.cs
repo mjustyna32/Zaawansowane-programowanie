@@ -120,7 +120,7 @@ namespace Zaawansowane_programowanie
             PrepareBasicPopulation();
             for(int i=0; i<iterations; i++)
             {
-                //krzyzowanie
+                //krzyzowanie - sprawdzić jak działa
                 populationOfSolutions = Crossing();
                 //selekcja
                 populationOfSolutions = Selection();
@@ -204,12 +204,11 @@ namespace Zaawansowane_programowanie
 
         private void PrepareBasicPopulation()
         {
-            for(int i = 0; i<populationSize; i++)
+            List<int> clonedIndexes = CloneIndexesList(columnsIndexes);
+            for (int i = 0; i<populationSize; i++)
             {
-                List<int> clonedIndexes = CloneIndexesList(columnsIndexes);
                 CollectionActions.Shuffle(clonedIndexes);
                 populationOfSolutions.Add(new Individual(clonedIndexes, this));
-
             }
         }
 
