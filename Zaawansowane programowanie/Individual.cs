@@ -58,6 +58,8 @@ namespace Zaawansowane_programowanie
         private void RemoveColumnsFromRow(int rowIndex)
         {
             bool onesStarted = false; //określa, czy napotkano juz pierwszą jedynkę w macierzy
+            //policzyc ile jest jedynek w wierszu
+            int onesInRow = algorithmObject.GetOnesCountInRow(rowIndex);
             foreach (int columnIndex in columnsPermutation)
             {
                 Column column = algorithmObject.GetColumnObjectAt(columnIndex);
@@ -65,9 +67,13 @@ namespace Zaawansowane_programowanie
                 {
                     onesStarted = true;
                 }
-                else if (onesStarted && !column.getRowValueAt(rowIndex) && !columnsToDelete.Contains(columnIndex))
+                else if (onesStarted && !column.getRowValueAt(rowIndex) && !columnsToDelete.Contains(columnIndex) && onesInRow>0) 
                 {
                     columnsToDelete.Add(columnIndex);
+                }
+                if (column.getRowValueAt(rowIndex))
+                {
+                    onesInRow--;
                 }
             }
         }

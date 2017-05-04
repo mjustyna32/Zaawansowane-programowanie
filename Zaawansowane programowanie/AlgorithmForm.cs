@@ -17,6 +17,7 @@ namespace Zaawansowane_programowanie
         private List<Individual> populationOfSolutions;
         private List<Column> allInstanceColumns;
         private List<int> columnsIndexes;
+        private List<int> onesInRows;
         private Thread currentThread;
         private int crossingSizeFactor = 4;
         private float bestIndividualParticipanceFactor = (float) 0.1;
@@ -25,6 +26,7 @@ namespace Zaawansowane_programowanie
         private float mutationPowerFactor = (float)0.2;
         private Individual bestIndividual = null;
 
+        private delegate void InvokeDelegate(Individual i);
         //Deprecated
         public List<Column> GetColumnTable
         {
@@ -45,6 +47,7 @@ namespace Zaawansowane_programowanie
             InitializeComponent();
             allInstanceColumns = CloneColumnsList(columns);
             columnsIndexes = GetColumnsIndexes(allInstanceColumns);
+            onesInRows = SumRows(allInstanceColumns);
             populationOfSolutions = new List<Individual>();
             iterations = iter;
             populationSize = popSize;
@@ -54,6 +57,28 @@ namespace Zaawansowane_programowanie
             mutationCountFactor = mutationCount /100;
             mutationPowerFactor = mutationPower /100;
             currentThread = currThread;
+        }
+
+        private List<int> SumRows(List<Column> allInstanceColumns)
+        {
+            int rowCount = GetColumnObjectAt(0).GetRowsCount;
+            List<int> onesCount = new List<int>();
+            for(int row=0; row<rowCount; row++)
+            {
+                int sum = 0;
+                foreach(Column col in allInstanceColumns)
+                {
+                    if (col.getRowValueAt(row))
+                        sum += 1;
+                }
+                onesCount.Add(sum);
+            }
+            return onesCount;
+        }
+
+        public int GetOnesCountInRow(int row)
+        {
+            return onesInRows.ElementAt(row);
         }
 
         public List<int> GetColumnsIndexes(List<Column> columns)
@@ -100,9 +125,29 @@ namespace Zaawansowane_programowanie
                 //selekcja
                 populationOfSolutions = Selection();
                 bestIndividual = GetBestIndividual();
+                PritIndividual(bestIndividual); //REFRESH
                 //mutacja / "cykl zagłady" //DODAC CYKLE ZAGLADY
                 InsertMutations();                
             }
+        }
+
+        private void PritIndividual(Individual individual)
+        {
+            string outStr= "";
+            foreach(int element in individual.Columns)
+            {
+                outStr += " " + element;
+            }
+            if (this.textBox1.InvokeRequired)
+            {
+                InvokeDelegate invokeDel = new InvokeDelegate(PritIndividual);
+                this.Invoke(invokeDel, individual);
+            }
+            else
+            {
+                textBox1.AppendText(individual.SolutionValue.ToString() +outStr + Environment.NewLine);
+            }
+           
         }
 
         private Individual GetBestIndividual()

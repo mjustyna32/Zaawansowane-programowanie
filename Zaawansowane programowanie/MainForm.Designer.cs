@@ -188,7 +188,7 @@
             0,
             0});
             this.numericUpDownIteration.Minimum = new decimal(new int[] {
-            100,
+            5,
             0,
             0,
             0});
