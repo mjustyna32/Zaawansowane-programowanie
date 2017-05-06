@@ -280,7 +280,7 @@
             this.numericUpDownMutationPower.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownMutationPower.TabIndex = 10;
             this.numericUpDownMutationPower.Value = new decimal(new int[] {
-            1,
+            20,
             0,
             0,
             0});
@@ -292,7 +292,7 @@
             this.numericUpDownMutationCount.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownMutationCount.TabIndex = 9;
             this.numericUpDownMutationCount.Value = new decimal(new int[] {
-            2,
+            10,
             0,
             0,
             0});
@@ -314,7 +314,7 @@
             this.numericUpDownCrossInterval.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownCrossInterval.TabIndex = 8;
             this.numericUpDownCrossInterval.Value = new decimal(new int[] {
-            2,
+            60,
             0,
             0,
             0});
@@ -333,9 +333,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(11, 156);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(137, 17);
+            this.label5.Size = new System.Drawing.Size(245, 17);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Liczność mutacji (%)";
+            this.label5.Text = "Procent populacji ulegający mutacjom";
             // 
             // label4
             // 

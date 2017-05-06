@@ -52,10 +52,10 @@ namespace Zaawansowane_programowanie
             iterations = iter;
             populationSize = popSize;
             crossingSizeFactor = crossSize;
-            bestIndividualParticipanceFactor = bestsParticipant /100;
-            crossingIntervalFactor = crossInterval / 100;
-            mutationCountFactor = mutationCount /100;
-            mutationPowerFactor = mutationPower /100;
+            bestIndividualParticipanceFactor = (float)bestsParticipant /100;
+            crossingIntervalFactor = (float)crossInterval / 100;
+            mutationCountFactor = (float)mutationCount /100;
+            mutationPowerFactor = (float)mutationPower /100;
             currentThread = currThread;
         }
 
@@ -120,12 +120,12 @@ namespace Zaawansowane_programowanie
             PrepareBasicPopulation();
             for(int i=0; i<iterations; i++)
             {
-                //krzyzowanie - sprawdzić jak działa
+                //krzyzowanie
                 populationOfSolutions = Crossing();
                 //selekcja
                 populationOfSolutions = Selection();
                 bestIndividual = GetBestIndividual();
-                PritIndividual(bestIndividual); //REFRESH
+                //PritIndividual(bestIndividual); //REFRESH
                 //mutacja / "cykl zagłady" //DODAC CYKLE ZAGLADY
                 InsertMutations();                
             }
@@ -177,6 +177,12 @@ namespace Zaawansowane_programowanie
 
         private List<Individual> Selection()
         {
+            /* Selekcja
+             * Daną mamy listę wszystkich osobników w populacji
+             * Listę mieszamy w sposób losowy
+             * Następnie iterujemy po parach osobników i zwracamy do populacji wyjściowej lepszy osobnik z pary
+             * Powtarzamy to tak długo, aż uzyskamy żądany rozmiar populacji wyjściowej.             *
+             */
             List<Individual> afterSelection = new List<Individual>();
             int outSize = populationOfSolutions.Count / crossingSizeFactor;
             while (afterSelection.Count < outSize)
@@ -204,9 +210,9 @@ namespace Zaawansowane_programowanie
 
         private void PrepareBasicPopulation()
         {
-            List<int> clonedIndexes = CloneIndexesList(columnsIndexes);
             for (int i = 0; i<populationSize; i++)
             {
+                List<int> clonedIndexes = CloneIndexesList(columnsIndexes);
                 CollectionActions.Shuffle(clonedIndexes);
                 populationOfSolutions.Add(new Individual(clonedIndexes, this));
             }
@@ -222,6 +228,7 @@ namespace Zaawansowane_programowanie
 
             //krzyzowanie osobniko gdzie wartosc jednego z nich <= srednia daje 2 potomkow, pp. jednego.
             // X% poniżej średniej
+            //KRZYŻOWANIE Z CZĘŚCIOWYM ODWZOROWANIEM
             Random rand = new Random();
             List<Individual> afterCorssing = new List<Individual>();
             int averageValue = getAverageIndividualValue();
@@ -260,13 +267,14 @@ namespace Zaawansowane_programowanie
             List<int> ind2ColumnsPerm = ind2.Columns;
             List<int> ind2Child = new List<int>();
             int crossingIntervalLength = Convert.ToInt32(ind1ColumnsPerm.Count * crossingIntervalFactor);
-            int commonPartPosition = rand.Next(ind1ColumnsPerm.Count / 2);
-            List<int> ind1SwapPart = ind1ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
-            List<int> ind2SwapPart = ind2ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength);
-
+            int commonPartPosition = rand.Next(ind1ColumnsPerm.Count - crossingIntervalLength);
+            List<int> ind1SwapPart = ind1ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength).ToList();
+            List<int> ind2SwapPart = ind2ColumnsPerm.GetRange(commonPartPosition, crossingIntervalLength).ToList();
             //dodaje te elementy, ktore mialy zostac
-            AddElementsToChild(ref ind1Child, ref ind1ColumnsPerm, ref ind1SwapPart, ref ind2SwapPart);
-            AddElementsToChild(ref ind2Child, ref ind2ColumnsPerm, ref ind2SwapPart, ref ind1SwapPart);
+            Dictionary<int, int> swapImage = MakeSwapImage(ind2SwapPart, ind1SwapPart);
+            AddElementsToChild(ref ind1Child, ref ind1ColumnsPerm, ref ind1SwapPart, ref ind2SwapPart, swapImage); //WSTAWIA TAKZE ZE SWAPOW I JEST ZA DUZO
+            swapImage = MakeSwapImage(ind1SwapPart, ind2SwapPart);
+            AddElementsToChild(ref ind2Child, ref ind2ColumnsPerm, ref ind2SwapPart, ref ind1SwapPart,swapImage);
             //Wstawia bloki wymiany
             InsertSwap(ind1Child, ind2SwapPart, commonPartPosition);
             InsertSwap(ind2Child, ind1SwapPart, commonPartPosition);
@@ -274,21 +282,42 @@ namespace Zaawansowane_programowanie
             afterCorssing.Add(new Individual(ind2Child, this));
         }
 
-        private void AddElementsToChild(ref List<int> child,ref List<int> parent1, ref List<int> parent1Swap, ref List<int> parent2Swap)
+        private Dictionary<int, int> MakeSwapImage(List<int> ind1SwapPart, List<int> ind2SwapPart)
         {
+            Dictionary<int, int> outDic = new Dictionary<int, int>();
+            for(int i=0; i<ind1SwapPart.Count; i++)
+            {
+                outDic.Add(ind1SwapPart.ElementAt(i), ind2SwapPart.ElementAt(i));
+            }
+            return outDic;
+
+        }
+
+        
+        private void AddElementsToChild(ref List<int> child,ref List<int> parent1, ref List<int> parent1Swap, ref List<int> parent2Swap, Dictionary<int, int> swapImage)
+        {
+            
             foreach (int column in parent1)
             {
-                if (parent2Swap.Contains(column)) //jeżeli dodawany element znajduje się już we fragmencie, który uległ wymianie
+                if (parent2Swap.Contains(column) && !parent1Swap.Contains(column)) //jeżeli dodawany element znajduje się już we fragmencie, który uległ wymianie
                 {
-                    int exchageElement = parent2Swap.IndexOf(column);
-                    exchageElement = parent1Swap.ElementAt(exchageElement);
-                    child.Add(exchageElement);
+                    int exchangeElement = GetImagedValue(column, swapImage);
+                    child.Add(exchangeElement);
                 }
-                else
+                else if(!parent1Swap.Contains(column))
                 {
                     child.Add(column);
                 }
             }
+        }
+
+        private int GetImagedValue(int value, Dictionary<int, int> swapImage)
+        {
+            int outValue = swapImage[value];
+            if (swapImage.ContainsKey(outValue))
+                return GetImagedValue(outValue, swapImage);
+            else
+                return outValue;
         }
 
         private void InsertSwap(List<int> child, List<int> swapPart, int commonPartPosition)
