@@ -14,7 +14,7 @@ namespace Zaawansowane_programowanie
     public partial class MainForm : Form
     {
         private string filePath;
-        private List<Column> allColumns;
+        public static List<Column> allColumns;
         public MainForm()
         {
             InitializeComponent();
@@ -22,6 +22,7 @@ namespace Zaawansowane_programowanie
 
         private void loadFileButton_Click(object sender, EventArgs e)
         {
+            /*
             openFileDialog1.Filter = "Pliki tesktowe (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -32,21 +33,35 @@ namespace Zaawansowane_programowanie
                 startButton.Enabled = true;
                 sr.Close();
             }
+            */
+            //C:\Users\Marek\Documents\tescik.txt
+            string fileName = "C:\\Users\\Marek\\Documents\\tescik.txt";
+            StreamReader sr = new StreamReader(fileName);
+            ReadFile(sr, fileName);
+            sr.Close();
         }
 
-        private void ReadFile(StreamReader reader)
+        private void ReadFile(StreamReader reader, string source)
         {
             string allFile = reader.ReadToEnd();
             string[] lines = allFile.Split('\n');
             //zakładamy, że w liniach sa zapisane kolumny, a nie wiersze
+            MakeColumnObjects(lines, source);
+        }
+
+        public void MakeColumnObjects(string[] lines, string source)
+        {
             int columnIndex = 0;
             allColumns = new List<Column>();
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
-                if(!isEmpty(line))
+                if (!isEmpty(line))
                     allColumns.Add(GetColumnObject(line, ref columnIndex));
             }
+            labelFileName.Text = source;
+            startButton.Enabled = true;
         }
+
         private bool isEmpty(string s)
         {
             if (s.Trim().Length > 0)
@@ -66,7 +81,7 @@ namespace Zaawansowane_programowanie
 
         private void generatorFormButton_Click(object sender, EventArgs e)
         {
-            GeneratorForm gen = new GeneratorForm();
+            GeneratorForm gen = new GeneratorForm(this);
             gen.Show();
         }
 
