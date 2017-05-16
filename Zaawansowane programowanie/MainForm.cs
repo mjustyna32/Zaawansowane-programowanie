@@ -35,7 +35,7 @@ namespace Zaawansowane_programowanie
             }
             */
             //C:\Users\Marek\Documents\tescik.txt
-            string fileName = "C:\\Users\\Marek\\Documents\\tescik.txt";
+            string fileName = "C:\\Users\\Marek\\Documents\\20x20.txt";
             StreamReader sr = new StreamReader(fileName);
             ReadFile(sr, fileName);
             sr.Close();
@@ -92,11 +92,30 @@ namespace Zaawansowane_programowanie
                 Convert.ToInt32(numericUpDownCrossFactor.Value), Convert.ToInt32(numericUpDownBests.Value), 
                 Convert.ToInt32(numericUpDownCrossInterval.Value), Convert.ToInt32(numericUpDownMutationCount.Value), 
                 Convert.ToInt32(numericUpDownMutationPower.Value), Thread.CurrentThread);
+            if (checkBoxCycles.Checked)
+            {
+                algorithmForm.CyclesEnabled = true;
+                algorithmForm.CycleIterationPercent = Convert.ToInt32(numericUpDownCyclesIteration);
+                algorithmForm.CycleSolutionLenPercent = Convert.ToInt32(numericUpDownCyclesSolutionLength);
+            }
             ThreadStart startingThreadDelegate = new ThreadStart(algorithmForm.RunAlgorithm);
             Thread algorithmThread = new Thread(startingThreadDelegate);
             algorithmForm.Show();
             algorithmThread.IsBackground = true;
             algorithmThread.Start();
+        }
+
+        private void checkBoxCycles_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxCycles.Checked)
+            {
+                numericUpDownCyclesSolutionLength.Enabled = true;
+                numericUpDownCyclesIteration.Enabled = true;
+            }else
+            {
+                numericUpDownCyclesSolutionLength.Enabled = false;
+                numericUpDownCyclesIteration.Enabled = false;
+            }
         }
     }
 }

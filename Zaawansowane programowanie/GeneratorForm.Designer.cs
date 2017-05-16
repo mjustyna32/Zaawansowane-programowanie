@@ -44,6 +44,7 @@
             this.loadInstanceButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.generatedInstanceLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.generateAndSaveButton = new System.Windows.Forms.Button();
             this.toSaveCheckBox = new System.Windows.Forms.CheckBox();
@@ -259,24 +260,34 @@
             this.panel7.Controls.Add(this.panel4);
             this.panel7.Controls.Add(this.button5);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(3, 397);
+            this.panel7.Location = new System.Drawing.Point(3, 374);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(904, 100);
+            this.panel7.Size = new System.Drawing.Size(904, 123);
             this.panel7.TabIndex = 8;
+            // 
+            // generatedInstanceLabel
+            // 
+            this.generatedInstanceLabel.AutoSize = true;
+            this.generatedInstanceLabel.Location = new System.Drawing.Point(14, 0);
+            this.generatedInstanceLabel.Name = "generatedInstanceLabel";
+            this.generatedInstanceLabel.Size = new System.Drawing.Size(96, 17);
+            this.generatedInstanceLabel.TabIndex = 9;
+            this.generatedInstanceLabel.Text = "Brak instancji.";
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.generatedInstanceLabel);
             this.panel4.Controls.Add(this.generateAndSaveButton);
             this.panel4.Controls.Add(this.toSaveCheckBox);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel4.Location = new System.Drawing.Point(675, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(229, 100);
+            this.panel4.Size = new System.Drawing.Size(229, 123);
             this.panel4.TabIndex = 8;
             // 
             // generateAndSaveButton
             // 
-            this.generateAndSaveButton.Location = new System.Drawing.Point(16, 37);
+            this.generateAndSaveButton.Location = new System.Drawing.Point(17, 60);
             this.generateAndSaveButton.Name = "generateAndSaveButton";
             this.generateAndSaveButton.Size = new System.Drawing.Size(196, 58);
             this.generateAndSaveButton.TabIndex = 0;
@@ -289,7 +300,7 @@
             this.toSaveCheckBox.AutoSize = true;
             this.toSaveCheckBox.Checked = true;
             this.toSaveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toSaveCheckBox.Location = new System.Drawing.Point(16, 10);
+            this.toSaveCheckBox.Location = new System.Drawing.Point(17, 37);
             this.toSaveCheckBox.Name = "toSaveCheckBox";
             this.toSaveCheckBox.Size = new System.Drawing.Size(125, 21);
             this.toSaveCheckBox.TabIndex = 7;
@@ -298,12 +309,13 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(8, 37);
+            this.button5.Location = new System.Drawing.Point(8, 60);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(101, 58);
             this.button5.TabIndex = 2;
-            this.button5.Text = "Anuluj";
+            this.button5.Text = "Zamknij";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // panel6
             // 
@@ -337,9 +349,19 @@
             // numericUpDownMutationPower
             // 
             this.numericUpDownMutationPower.Location = new System.Drawing.Point(327, 126);
+            this.numericUpDownMutationPower.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMutationPower.Name = "numericUpDownMutationPower";
             this.numericUpDownMutationPower.Size = new System.Drawing.Size(52, 22);
             this.numericUpDownMutationPower.TabIndex = 17;
+            this.numericUpDownMutationPower.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label9
             // 
@@ -542,5 +564,6 @@
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownMutationPower;
+        private System.Windows.Forms.Label generatedInstanceLabel;
     }
 }

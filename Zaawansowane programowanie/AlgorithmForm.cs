@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -12,6 +8,7 @@ namespace Zaawansowane_programowanie
 {
     public partial class AlgorithmForm : Form
     {
+        private bool terminate = false;
         private int iterations;
         private int populationSize;
         private List<Individual> populationOfSolutions;
@@ -24,9 +21,30 @@ namespace Zaawansowane_programowanie
         private float crossingIntervalFactor =(float) 0.5;
         private float mutationCountFactor = (float)0.2;
         private float mutationPowerFactor = (float)0.2;
-        private Individual bestIndividual = null;
+        private volatile Individual bestIndividual = null;
+        private bool exterminationCycle=false;
+        private float percentOfIterationCycle = (float)0.1;
+        private float percentOfSolutionLenCycle = (float)0.4;
+        
+        public bool CyclesEnabled
+        {
+            get { return exterminationCycle; }
+            set { exterminationCycle = value; }
+        }
+
+        public int CycleIterationPercent
+        {
+            get { return Convert.ToInt32(percentOfIterationCycle * 100); }
+            set { percentOfIterationCycle = (float)value / 100; }
+        }
+        public int CycleSolutionLenPercent
+        {
+            get { return Convert.ToInt32(percentOfSolutionLenCycle * 100); }
+            set { percentOfSolutionLenCycle = (float)value / 100; }
+        }
 
         private delegate void InvokeDelegate(Individual i);
+        private delegate void InvokeProgressBar(int i);
         //Deprecated
         public List<Column> GetColumnTable
         {
@@ -118,16 +136,94 @@ namespace Zaawansowane_programowanie
         public void RunAlgorithm()
         {
             PrepareBasicPopulation();
-            for(int i=0; i<iterations; i++)
+            int bestSolutionValue = -1;
+            int lastBestFound = 0;
+            Individual currentBest;
+            for(int i=0; i<iterations && !terminate && bestSolutionValue!=0; i++)
             {
-                //krzyzowanie
                 populationOfSolutions = Crossing();
-                //selekcja
                 populationOfSolutions = Selection();
-                bestIndividual = GetBestIndividual();
-                //PritIndividual(bestIndividual); //REFRESH
-                //mutacja / "cykl zagłady" //DODAC CYKLE ZAGLADY
-                InsertMutations();                
+                currentBest = GetBestIndividual();
+                if (SaveBestIndividual(currentBest))
+                    lastBestFound = i;
+                bestSolutionValue = bestIndividual.SolutionValue;
+
+                if (CyclesEnabled && IterationElapsed(lastBestFound, i))
+                {
+                    lastBestFound = i;
+                    //Extermination();
+                }else
+                    InsertMutations();
+
+
+                try
+                {
+                    int percent = (i * 100) / iterations;
+                    UpdateValuesOnBarAndChart(percent);
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            UpdateProgrssBar(100);
+        }
+
+        private bool IterationElapsed(int lastBestFound, int i)
+        {
+            int interval = Convert.ToInt32(iterations * percentOfIterationCycle);
+            if (i - lastBestFound > interval)
+                return true;
+            else
+                return false;
+        }
+
+        private bool SaveBestIndividual(Individual currentBest)
+        {
+            if (bestIndividual == null)
+            {
+                bestIndividual = currentBest;
+                return true;
+            }
+            else if (currentBest.SolutionValue < bestIndividual.SolutionValue)
+            {
+                bestIndividual = currentBest;
+                return true;
+            }
+            return false;
+        }
+
+        private void UpdateValuesOnBarAndChart(int percent)
+        {
+            UpdateProgrssBar(percent);
+            PritIndividual(bestIndividual); //REFRESH
+            //UpdateChart();
+        }
+
+        private void updateChart(int sekunda)
+        {
+            //wykres odswiezany co 500 ms??
+            if (this.InvokeRequired)
+            {
+                //SecondDelegate sd = new SecondDelegate(updateChart);
+                //this.Invoke(sd, sekunda);
+            }
+            else
+            {
+                chart1.Series[0].Points.AddY(sekunda);
+                chart1.Update();
+            }
+        }
+        private void UpdateProgrssBar(int percent)
+        {
+            if (this.progressBar1.InvokeRequired)
+            {
+                InvokeProgressBar invokeDel = new InvokeProgressBar(UpdateProgrssBar);
+                this.Invoke(invokeDel, percent);
+            }
+            else
+            {
+                progressBar1.Value = percent;
             }
         }
 
@@ -145,7 +241,7 @@ namespace Zaawansowane_programowanie
             }
             else
             {
-                textBox1.AppendText(individual.SolutionValue.ToString() +outStr + Environment.NewLine);
+                textBox1.AppendText(individual.SolutionValue.ToString()+Environment.NewLine+outStr + Environment.NewLine);
             }
            
         }
@@ -341,7 +437,21 @@ namespace Zaawansowane_programowanie
 
         private void AlgorithmForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-           
+            terminate = true;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            terminate = true;
+            this.Close();
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabControl1.TabPages["resultPage"])
+            {
+                //Odswieżanie wyniku
+            }
         }
     }
 }

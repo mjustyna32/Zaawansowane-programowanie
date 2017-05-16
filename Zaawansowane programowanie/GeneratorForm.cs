@@ -16,7 +16,7 @@ namespace Zaawansowane_programowanie
         MainForm mainForm;
         private List<string> instance;
         public GeneratorForm(MainForm obj)
-        {
+        { 
             InitializeComponent();
             mainForm = obj;
         }
@@ -27,12 +27,29 @@ namespace Zaawansowane_programowanie
             instance = Generate();
             if (toSaveCheckBox.Checked)
                 //zrobić zapis string'ów instance
-                Save();
+                SaveGeneratedInstance();
             else
                 AddInstanceToMainForm(); //laduje do mainForm
-            MessageBox.Show("Wygenerowano instancję!");
+            generatedInstanceLabel.Text = "Wygenerowano instancję";
         }
+        private void SaveGeneratedInstance()
+        {
+            saveFileDialog1.Filter = "Plik tekstowy (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
+            string outputInstance = "";
+            CollectionActions.Shuffle(instance);
+            foreach(string s in GetTransponedStringList(instance))
+            {
+                outputInstance += s + Environment.NewLine;
+            }
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.StreamWriter file = new System.IO.StreamWriter(saveFileDialog1.FileName);
+                file.WriteLine(outputInstance);
+                file.Close();
 
+            }
+            saveFileDialog1.FileName = "";
+        }
         private void AddInstanceToMainForm()
         {
             //zrobic listę obiektów typu column
@@ -98,7 +115,7 @@ namespace Zaawansowane_programowanie
                 }
                 for (int j = 0; j < matrixLength; j++)
                 {
-                    if (j >= previousOnes && j <= previousOnes + randomLength || (matrixLength-previousOnes<=2 && j<0.1))
+                    if (j >= previousOnes && j <= previousOnes + randomLength)
                     {
                         sample += "1";
                     }
@@ -161,10 +178,10 @@ namespace Zaawansowane_programowanie
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            Save();
+            SaveDataGridView();
         }
 
-        private void Save()
+        private void SaveDataGridView()
         {
             saveFileDialog1.Filter = "Plik tekstowy (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -269,6 +286,11 @@ namespace Zaawansowane_programowanie
                 }
             }
             SetHeaderValues();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
