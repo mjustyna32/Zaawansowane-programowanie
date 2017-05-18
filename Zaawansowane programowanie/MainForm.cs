@@ -95,8 +95,8 @@ namespace Zaawansowane_programowanie
             if (checkBoxCycles.Checked)
             {
                 algorithmForm.CyclesEnabled = true;
-                algorithmForm.CycleIterationPercent = Convert.ToInt32(numericUpDownCyclesIteration);
-                algorithmForm.CycleSolutionLenPercent = Convert.ToInt32(numericUpDownCyclesSolutionLength);
+                algorithmForm.CycleIterationPercent = Convert.ToInt32(numericUpDownCyclesIteration.Value);
+                algorithmForm.CycleSolutionLenPercent = Convert.ToInt32(numericUpDownCyclesSolutionLength.Value);
             }
             ThreadStart startingThreadDelegate = new ThreadStart(algorithmForm.RunAlgorithm);
             Thread algorithmThread = new Thread(startingThreadDelegate);

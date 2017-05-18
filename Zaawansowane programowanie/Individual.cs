@@ -95,6 +95,22 @@ namespace Zaawansowane_programowanie
             }
         }
 
+        internal void MutateFragment(int startingPosition, int mutatedIntervalSize)
+        {
+            List<int> mutatedColumns = columnsPermutation.GetRange(startingPosition, mutatedIntervalSize);
+            CollectionActions.Shuffle(mutatedColumns);
+            List<int> newPermutation = new List<int>();
+            for(int i =0; i<columnsPermutation.Count; i++)
+            {
+                if (i >= startingPosition && i < startingPosition + mutatedIntervalSize)
+                {
+                    newPermutation.Add(mutatedColumns.ElementAt(i-startingPosition));
+                } else
+                    newPermutation.Add(columnsPermutation.ElementAt(i));
+            }
+            columnsPermutation = newPermutation;
+        }
+
         /*
         public int CheckSolution()
         {

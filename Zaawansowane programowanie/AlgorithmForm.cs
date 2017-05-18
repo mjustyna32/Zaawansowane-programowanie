@@ -25,7 +25,7 @@ namespace Zaawansowane_programowanie
         private bool exterminationCycle=false;
         private float percentOfIterationCycle = (float)0.1;
         private float percentOfSolutionLenCycle = (float)0.4;
-        
+        private int lastChartRefresh = 0;
         public bool CyclesEnabled
         {
             get { return exterminationCycle; }
@@ -45,6 +45,7 @@ namespace Zaawansowane_programowanie
 
         private delegate void InvokeDelegate(Individual i);
         private delegate void InvokeProgressBar(int i);
+        private delegate void InvokeChart();
         //Deprecated
         public List<Column> GetColumnTable
         {
@@ -151,15 +152,14 @@ namespace Zaawansowane_programowanie
                 if (CyclesEnabled && IterationElapsed(lastBestFound, i))
                 {
                     lastBestFound = i;
-                    //Extermination();
+                    Extermination();
                 }else
                     InsertMutations();
-
 
                 try
                 {
                     int percent = (i * 100) / iterations;
-                    UpdateValuesOnBarAndChart(percent);
+                    UpdateValuesOnBarAndChart(percent); // poprawić odświeżanie
                 }
                 catch
                 {
@@ -167,6 +167,18 @@ namespace Zaawansowane_programowanie
                 }
             }
             UpdateProgrssBar(100);
+        }
+
+        private void Extermination()
+        {
+            Random rand = new Random();   
+            foreach(Individual i in populationOfSolutions)
+            {
+                int individualLength = i.Columns.Count;
+                int mutatedIntervalSize = individualLength*CycleSolutionLenPercent/100;
+                int startingPosition = rand.Next(individualLength - mutatedIntervalSize);
+                i.MutateFragment(startingPosition, mutatedIntervalSize);
+            }
         }
 
         private bool IterationElapsed(int lastBestFound, int i)
@@ -196,21 +208,25 @@ namespace Zaawansowane_programowanie
         private void UpdateValuesOnBarAndChart(int percent)
         {
             UpdateProgrssBar(percent);
-            PritIndividual(bestIndividual); //REFRESH
-            //UpdateChart();
+            UpdateChart();
         }
 
-        private void updateChart(int sekunda)
+        private void UpdateChart()
         {
-            //wykres odswiezany co 500 ms??
+            int currentSecond = DateTime.Now.Second;
+
             if (this.InvokeRequired)
             {
-                //SecondDelegate sd = new SecondDelegate(updateChart);
-                //this.Invoke(sd, sekunda);
+                InvokeChart ic= new InvokeChart(UpdateChart);
+                this.Invoke(ic);
             }
             else
             {
-                chart1.Series[0].Points.AddY(sekunda);
+                chart1.Series[0].Points.AddY(bestIndividual.SolutionValue);
+            }
+            if (currentSecond - lastChartRefresh == 1)
+            {
+                lastChartRefresh = currentSecond;
                 chart1.Update();
             }
         }
@@ -227,7 +243,7 @@ namespace Zaawansowane_programowanie
             }
         }
 
-        private void PritIndividual(Individual individual)
+        private void PrintIndividual(Individual individual)
         {
             string outStr= "";
             foreach(int element in individual.Columns)
@@ -236,7 +252,7 @@ namespace Zaawansowane_programowanie
             }
             if (this.textBox1.InvokeRequired)
             {
-                InvokeDelegate invokeDel = new InvokeDelegate(PritIndividual);
+                InvokeDelegate invokeDel = new InvokeDelegate(PrintIndividual);
                 this.Invoke(invokeDel, individual);
             }
             else
@@ -450,8 +466,18 @@ namespace Zaawansowane_programowanie
         {
             if (tabControl1.SelectedTab == tabControl1.TabPages["resultPage"])
             {
-                //Odswieżanie wyniku
+                PrintIndividual(bestIndividual); //REFRESH
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            terminate = true;
+        }
+
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            PrintIndividual(bestIndividual);
         }
     }
 }

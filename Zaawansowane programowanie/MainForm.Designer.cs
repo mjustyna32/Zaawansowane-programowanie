@@ -36,6 +36,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.numericUpDownCyclesSolutionLength = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCyclesIteration = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.checkBoxCycles = new System.Windows.Forms.CheckBox();
             this.numericUpDownBests = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDownIteration = new System.Windows.Forms.NumericUpDown();
@@ -55,14 +60,11 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.startButton = new System.Windows.Forms.Button();
-            this.checkBoxCycles = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numericUpDownCyclesIteration = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownCyclesSolutionLength = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesSolutionLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesIteration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBests)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIteration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPopulationSize)).BeginInit();
@@ -72,8 +74,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCrossInterval)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesIteration)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesSolutionLength)).BeginInit();
             this.SuspendLayout();
             // 
             // generatorFormButton
@@ -165,6 +165,71 @@
             this.panel3.Size = new System.Drawing.Size(886, 369);
             this.panel3.TabIndex = 2;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(442, 131);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(298, 17);
+            this.label11.TabIndex = 23;
+            this.label11.Text = "Procent dł. rozwiązania podlegający mutacjom";
+            // 
+            // numericUpDownCyclesSolutionLength
+            // 
+            this.numericUpDownCyclesSolutionLength.Location = new System.Drawing.Point(754, 129);
+            this.numericUpDownCyclesSolutionLength.Maximum = new decimal(new int[] {
+            98,
+            0,
+            0,
+            0});
+            this.numericUpDownCyclesSolutionLength.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownCyclesSolutionLength.Name = "numericUpDownCyclesSolutionLength";
+            this.numericUpDownCyclesSolutionLength.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDownCyclesSolutionLength.TabIndex = 22;
+            this.numericUpDownCyclesSolutionLength.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownCyclesIteration
+            // 
+            this.numericUpDownCyclesIteration.Location = new System.Drawing.Point(754, 83);
+            this.numericUpDownCyclesIteration.Name = "numericUpDownCyclesIteration";
+            this.numericUpDownCyclesIteration.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDownCyclesIteration.TabIndex = 21;
+            this.numericUpDownCyclesIteration.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(442, 85);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(264, 17);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "Procent iteracji bez poprawy rozwiązania";
+            // 
+            // checkBoxCycles
+            // 
+            this.checkBoxCycles.AutoSize = true;
+            this.checkBoxCycles.Checked = true;
+            this.checkBoxCycles.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCycles.Location = new System.Drawing.Point(589, 45);
+            this.checkBoxCycles.Name = "checkBoxCycles";
+            this.checkBoxCycles.Size = new System.Drawing.Size(117, 21);
+            this.checkBoxCycles.TabIndex = 19;
+            this.checkBoxCycles.Text = "Cykle zagłady";
+            this.checkBoxCycles.UseVisualStyleBackColor = true;
+            this.checkBoxCycles.CheckedChanged += new System.EventHandler(this.checkBoxCycles_CheckedChanged);
+            // 
             // numericUpDownBests
             // 
             this.numericUpDownBests.Location = new System.Drawing.Point(289, 226);
@@ -182,9 +247,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(11, 226);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(125, 17);
+            this.label9.Size = new System.Drawing.Size(151, 17);
             this.label9.TabIndex = 16;
-            this.label9.Text = "Udział najlepszych";
+            this.label9.Text = "Udział najlepszych (%)";
             // 
             // numericUpDownIteration
             // 
@@ -414,71 +479,6 @@
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
-            // checkBoxCycles
-            // 
-            this.checkBoxCycles.AutoSize = true;
-            this.checkBoxCycles.Checked = true;
-            this.checkBoxCycles.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCycles.Location = new System.Drawing.Point(589, 45);
-            this.checkBoxCycles.Name = "checkBoxCycles";
-            this.checkBoxCycles.Size = new System.Drawing.Size(117, 21);
-            this.checkBoxCycles.TabIndex = 19;
-            this.checkBoxCycles.Text = "Cykle zagłady";
-            this.checkBoxCycles.UseVisualStyleBackColor = true;
-            this.checkBoxCycles.CheckedChanged += new System.EventHandler(this.checkBoxCycles_CheckedChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(442, 85);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(264, 17);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "Procent iteracji bez poprawy rozwiązania";
-            // 
-            // numericUpDownCyclesIteration
-            // 
-            this.numericUpDownCyclesIteration.Location = new System.Drawing.Point(754, 83);
-            this.numericUpDownCyclesIteration.Name = "numericUpDownCyclesIteration";
-            this.numericUpDownCyclesIteration.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDownCyclesIteration.TabIndex = 21;
-            this.numericUpDownCyclesIteration.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownCyclesSolutionLength
-            // 
-            this.numericUpDownCyclesSolutionLength.Location = new System.Drawing.Point(754, 129);
-            this.numericUpDownCyclesSolutionLength.Maximum = new decimal(new int[] {
-            98,
-            0,
-            0,
-            0});
-            this.numericUpDownCyclesSolutionLength.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericUpDownCyclesSolutionLength.Name = "numericUpDownCyclesSolutionLength";
-            this.numericUpDownCyclesSolutionLength.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDownCyclesSolutionLength.TabIndex = 22;
-            this.numericUpDownCyclesSolutionLength.Value = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(442, 131);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(298, 17);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Procent dł. rozwiązania podlegający mutacjom";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -493,6 +493,8 @@
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesSolutionLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesIteration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBests)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIteration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPopulationSize)).EndInit();
@@ -502,8 +504,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCrossInterval)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesIteration)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCyclesSolutionLength)).EndInit();
             this.ResumeLayout(false);
 
         }
