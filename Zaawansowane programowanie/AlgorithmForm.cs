@@ -15,7 +15,6 @@ namespace Zaawansowane_programowanie
         private List<Column> allInstanceColumns;
         private List<int> columnsIndexes;
         private List<int> onesInRows;
-        private Thread currentThread;
         private int crossingSizeFactor = 4;
         private float bestIndividualParticipanceFactor = (float) 0.1;
         private float crossingIntervalFactor =(float) 0.5;
@@ -23,6 +22,7 @@ namespace Zaawansowane_programowanie
         private float mutationPowerFactor = (float)0.2;
         private volatile Individual bestIndividual = null;
         private bool exterminationCycle=false;
+        private float exterminationFactor = (float)0.5;
         private float percentOfIterationCycle = (float)0.1;
         private float percentOfSolutionLenCycle = (float)0.4;
         private int lastChartRefresh = 0;
@@ -30,6 +30,10 @@ namespace Zaawansowane_programowanie
         {
             get { return exterminationCycle; }
             set { exterminationCycle = value; }
+        }
+        public Individual BestIndividual
+        {
+            get { return bestIndividual; }
         }
 
         public int CycleIterationPercent
@@ -61,7 +65,7 @@ namespace Zaawansowane_programowanie
         {
             get { return PopulationSize; }
         }
-        public AlgorithmForm(List<Column> columns, int iter, int popSize, int crossSize, int bestsParticipant,int crossInterval, int mutationCount, int mutationPower,  Thread currThread )
+        public AlgorithmForm(List<Column> columns, int iter, int popSize, int crossSize, int bestsParticipant,int crossInterval, int mutationCount, int mutationPower, string text = "Algorytm", float extermFactor = (float)0.5)
         {
             InitializeComponent();
             allInstanceColumns = CloneColumnsList(columns);
@@ -75,9 +79,10 @@ namespace Zaawansowane_programowanie
             crossingIntervalFactor = (float)crossInterval / 100;
             mutationCountFactor = (float)mutationCount /100;
             mutationPowerFactor = (float)mutationPower /100;
-            currentThread = currThread;
+            exterminationFactor = extermFactor;
+            this.Text = text;
         }
-
+       
         private List<int> SumRows(List<Column> allInstanceColumns)
         {
             int rowCount = GetColumnObjectAt(0).GetRowsCount;
@@ -87,7 +92,7 @@ namespace Zaawansowane_programowanie
                 int sum = 0;
                 foreach(Column col in allInstanceColumns)
                 {
-                    if (col.getRowValueAt(row))
+                    if (col.GetRowValueAt(row))
                         sum += 1;
                 }
                 onesCount.Add(sum);
@@ -136,24 +141,28 @@ namespace Zaawansowane_programowanie
         }
         public void RunAlgorithm()
         {
+
+            Application.DoEvents();
             PrepareBasicPopulation();
             int bestSolutionValue = -1;
             int lastBestFound = 0;
             Individual currentBest;
-            for(int i=0; i<iterations && !terminate && bestSolutionValue!=0; i++)
+            for (int i = 0; i < iterations && !terminate && bestSolutionValue != 0; i++)
             {
                 populationOfSolutions = Crossing();
+                CountSolutionsValues();
                 populationOfSolutions = Selection();
                 currentBest = GetBestIndividual();
                 if (SaveBestIndividual(currentBest))
                     lastBestFound = i;
                 bestSolutionValue = bestIndividual.SolutionValue;
-
+                
                 if (CyclesEnabled && IterationElapsed(lastBestFound, i))
                 {
                     lastBestFound = i;
                     Extermination();
-                }else
+                }
+                else
                     InsertMutations();
 
                 try
@@ -161,14 +170,38 @@ namespace Zaawansowane_programowanie
                     int percent = (i * 100) / iterations;
                     UpdateValuesOnBarAndChart(percent); // poprawić odświeżanie
                 }
-                catch
+                catch(Exception e)
                 {
-                    return;
+                    //MessageBox.Show(e.StackTrace);
+                    break;
                 }
             }
-            UpdateProgrssBar(100);
+            /*
+            if (bestIndividual.SolutionValue == 0)
+            {
+                bestIndividual.CheckSolution();
+            }
+            */
+            UpdateProgrssBar(100); //ewentualnie do usuniecia
         }
 
+        private void CountSolutionsValues()
+        {
+            foreach(Individual i in populationOfSolutions)
+            {
+                i.CheckSolution();
+            }
+        }
+
+        private void TestsSaver()
+        {
+            string line = iterations.ToString() + ", " + bestIndividual.SolutionValue;
+            string fileName = "plik.txt";
+            System.IO.StreamWriter wr = new System.IO.StreamWriter(fileName);
+            wr.WriteLine(line);
+            wr.Close();
+        }
+        /*
         private void Extermination()
         {
             Random rand = new Random();   
@@ -180,6 +213,17 @@ namespace Zaawansowane_programowanie
                 i.MutateFragment(startingPosition, mutatedIntervalSize);
             }
         }
+        */
+        private void Extermination()
+        {
+            float prevMutationCount = mutationCountFactor;
+            float prevMutationPower = mutationPowerFactor;
+            mutationCountFactor = 1;
+            mutationPowerFactor = (float)0.5;
+            InsertMutations();
+            mutationCountFactor = prevMutationCount;
+            mutationPowerFactor = prevMutationPower;
+        }
 
         private bool IterationElapsed(int lastBestFound, int i)
         {
@@ -190,19 +234,34 @@ namespace Zaawansowane_programowanie
                 return false;
         }
 
+        private Individual GetBestIndividual()
+        {
+            Individual bestFound = populationOfSolutions.ElementAt(0);
+            foreach (Individual i in populationOfSolutions)
+            {
+                if (i.SolutionValue < bestFound.SolutionValue)
+                {
+                    bestFound = i;
+                }
+            }
+            return bestFound;
+        }
+
         private bool SaveBestIndividual(Individual currentBest)
         {
+            bool decision = false;
             if (bestIndividual == null)
             {
                 bestIndividual = currentBest;
-                return true;
+                decision = true;
             }
             else if (currentBest.SolutionValue < bestIndividual.SolutionValue)
             {
-                bestIndividual = currentBest;
-                return true;
+                bestIndividual = currentBest.GetObjectCopy();
+                bestIndividual.CheckSolution();
+                decision=true;
             }
-            return false;
+            return decision;
         }
 
         private void UpdateValuesOnBarAndChart(int percent)
@@ -246,9 +305,14 @@ namespace Zaawansowane_programowanie
         private void PrintIndividual(Individual individual)
         {
             string outStr= "";
+            string toDelete = "";
             foreach(int element in individual.Columns)
             {
                 outStr += " " + element;
+            }
+            foreach (int element in individual.ColumnsToDelete)
+            {
+                toDelete += " " + element;
             }
             if (this.textBox1.InvokeRequired)
             {
@@ -257,23 +321,24 @@ namespace Zaawansowane_programowanie
             }
             else
             {
-                textBox1.AppendText(individual.SolutionValue.ToString()+Environment.NewLine+outStr + Environment.NewLine);
+                textBox1.AppendText(individual.SolutionValue.ToString()+" -> "+toDelete+Environment.NewLine+outStr + Environment.NewLine);
+                string outLine = "";
+                for(int row =0; row< allInstanceColumns.ElementAt(0).GetRowsCount; row++)
+                {
+                   foreach(int col in bestIndividual.Columns)
+                    {
+                       outLine+= GetColumnObjectAt(col).GetRowValueAtInt(row) + " ";
+                    }
+                    outLine += Environment.NewLine;
+
+                }
+                textBox1.AppendText(outLine);
+                
             }
            
         }
 
-        private Individual GetBestIndividual()
-        {
-            Individual bestFound = populationOfSolutions.ElementAt(0);
-            bestFound.CheckSolution();
-            foreach(Individual i in populationOfSolutions){ //do optymalizacji
-                if (i.CheckSolution() < bestFound.SolutionValue)
-                {
-                    bestFound = i;
-                }
-            }
-            return bestFound;
-        }
+        
 
         private void InsertMutations()
         {
@@ -306,7 +371,7 @@ namespace Zaawansowane_programowanie
 
         private void TournamentSelection(ref List<Individual> afterSelection, int outSize)
         {
-            CollectionActions.Shuffle(populationOfSolutions); //zmniejszamy ryzyko wylosowania dwa razy tych samych
+            new CollectionActions().Shuffle(ref populationOfSolutions); //zmniejszamy ryzyko wylosowania dwa razy tych samych
             for(int i=0; i<populationOfSolutions.Count-2 && afterSelection.Count < outSize; i+=2) //porównujemy pary
             {
                 afterSelection.Add(GetSelectedIndividual(i, i+1));
@@ -317,7 +382,7 @@ namespace Zaawansowane_programowanie
         {
             Individual ind1 = populationOfSolutions.ElementAt(index1);
             Individual ind2 = populationOfSolutions.ElementAt(index2);
-            return ind1.CheckSolution() <= ind2.CheckSolution() ? ind1 : ind2;
+            return ind1.SolutionValue <= ind2.SolutionValue ? ind1 : ind2;
         }
 
         private void PrepareBasicPopulation()
@@ -325,7 +390,7 @@ namespace Zaawansowane_programowanie
             for (int i = 0; i<populationSize; i++)
             {
                 List<int> clonedIndexes = CloneIndexesList(columnsIndexes);
-                CollectionActions.Shuffle(clonedIndexes);
+                new CollectionActions().Shuffle(ref clonedIndexes);
                 populationOfSolutions.Add(new Individual(clonedIndexes, this));
             }
         }
@@ -343,14 +408,31 @@ namespace Zaawansowane_programowanie
             //KRZYŻOWANIE Z CZĘŚCIOWYM ODWZOROWANIEM
             Random rand = new Random();
             List<Individual> afterCorssing = new List<Individual>();
-            int averageValue = getAverageIndividualValue();
+            int averageValue = GetAverageIndividualValue();
             int outPopulationSize = populationOfSolutions.Count * crossingSizeFactor;
             int bestIndCount = Convert.ToInt32(outPopulationSize * bestIndividualParticipanceFactor);
 
+
+
+            //DO POPRAWY, DODAWAĆ KOPIE NAJLEPSZEGO
             //zabezpieczyc na wypadek gdyby bylo zbyt malo ponizej sredniej
-            MakeCrossedPopulation(ref afterCorssing, averageValue, bestIndCount);
+            AddBestCopies(ref afterCorssing, bestIndCount);
+            //MakeCrossedPopulation(ref afterCorssing, averageValue, bestIndCount);
             MakeCrossedPopulation(ref afterCorssing, averageValue*2, outPopulationSize); //*2 zrobic jako parametr
             return afterCorssing;
+        }
+
+        private void AddBestCopies(ref List<Individual> afterCorssing, int bestIndCount)
+        {
+            if(bestIndividual == null)
+            {
+                return;
+            }
+            while (bestIndCount > 0)
+            {
+                afterCorssing.Add(bestIndividual.GetObjectCopy());
+                bestIndCount--;
+            }
         }
 
         private List<Individual> MakeCrossedPopulation(ref List<Individual> afterCorssing, int averageValue, int outPopulationThreshold)
@@ -364,14 +446,14 @@ namespace Zaawansowane_programowanie
                 Individual ind2 = populationOfSolutions.ElementAt(ind2Index);
                 if ((ind1 != ind2) && (ind1.SolutionValue <= averageValue || ind2.SolutionValue <= averageValue))
                 {
-                    addCrossedPair(ind1, ind2, ref afterCorssing);
+                    AddCrossedPair(ind1, ind2, ref afterCorssing);
                 }
             }
 
             return afterCorssing;
         }
 
-        private void addCrossedPair(Individual ind1, Individual ind2, ref List<Individual> afterCorssing)
+        private void AddCrossedPair(Individual ind1, Individual ind2, ref List<Individual> afterCorssing)
         {
             Random rand = new Random();
             List<int> ind1ColumnsPerm = ind1.Columns;
@@ -399,6 +481,7 @@ namespace Zaawansowane_programowanie
             Dictionary<int, int> outDic = new Dictionary<int, int>();
             for(int i=0; i<ind1SwapPart.Count; i++)
             {
+
                 outDic.Add(ind1SwapPart.ElementAt(i), ind2SwapPart.ElementAt(i));
             }
             return outDic;
@@ -440,7 +523,7 @@ namespace Zaawansowane_programowanie
             }
         }
 
-        private int getAverageIndividualValue()
+        private int GetAverageIndividualValue()
         {
             int sum = 0;
             foreach(Individual i in populationOfSolutions)
@@ -448,12 +531,6 @@ namespace Zaawansowane_programowanie
                 sum += i.CheckSolution();
             }
             return sum / populationOfSolutions.Count;
-        }
-
-
-        private void AlgorithmForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            terminate = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -478,6 +555,13 @@ namespace Zaawansowane_programowanie
         private void refreshButton_Click(object sender, EventArgs e)
         {
             PrintIndividual(bestIndividual);
+        }
+
+        private void AlgorithmForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            terminate = true;
+            e.Cancel = true;
+            this.Hide();
         }
     }
 }

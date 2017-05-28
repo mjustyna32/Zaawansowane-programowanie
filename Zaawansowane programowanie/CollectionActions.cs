@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Zaawansowane_programowanie
 {
-    static class CollectionActions
+    class CollectionActions
     {
-        private static Random rnd = new Random();
-        public static void Swap<T>(this IList<T> list, int i, int j)
+        private Random rnd = new Random();
+        public void Swap<T>(ref List<T> list, int i, int j)
         {
             var temp = list[i];
             list[i] = list[j];
             list[j] = temp;
         }
-        public static void Shuffle<T>(this IList<T> list)
+        public void Shuffle<T>(ref List<T> list)
         {
             for (var i = 0; i < list.Count; i++)
-                list.Swap(i, rnd.Next(i, list.Count));
+                Swap(ref list, i, rnd.Next(i, list.Count));
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Zaawansowane_programowanie
         Random rand = new Random();
         MainForm mainForm;
         private List<string> instance;
+        private float randomLengthFactor = (float)0.5;
         public GeneratorForm(MainForm obj)
         { 
             InitializeComponent();
@@ -24,7 +25,7 @@ namespace Zaawansowane_programowanie
         private void GenerateAndSave_Click(object sender, EventArgs e)
         {
             //wygeneruj instancje
-            instance = Generate();
+            instance = Generate(Convert.ToInt32(numericUpDownMFragments.Value), Convert.ToInt32(numericUpDownNSamples.Value), Convert.ToInt32(numericUpDownErrorCount.Value), Convert.ToInt32(numericUpDownMutationPower.Value));
             if (toSaveCheckBox.Checked)
                 //zrobić zapis string'ów instance
                 SaveGeneratedInstance();
@@ -36,7 +37,7 @@ namespace Zaawansowane_programowanie
         {
             saveFileDialog1.Filter = "Plik tekstowy (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
             string outputInstance = "";
-            CollectionActions.Shuffle(instance);
+            new CollectionActions().Shuffle(ref instance);
             foreach(string s in GetTransponedStringList(instance))
             {
                 outputInstance += s + Environment.NewLine;
@@ -54,7 +55,7 @@ namespace Zaawansowane_programowanie
         {
             //zrobic listę obiektów typu column
             List<string> columns = GetTransponedStringList(instance);
-            CollectionActions.Shuffle(columns);
+            new CollectionActions().Shuffle(ref columns);
             mainForm.MakeColumnObjects(columns.ToArray(), "Wygenerowany obiekt");
             //przeslac ja do
             //MainForm.allColumns = kolumny
@@ -75,8 +76,12 @@ namespace Zaawansowane_programowanie
 
             return columns;
         }
-
-        private List<string> Generate()
+        public void TestsGenerator(int fragments, int samples, int mutationCount, int mutationPower)
+        {
+            instance = Generate(fragments, samples, mutationCount, mutationPower);
+            AddInstanceToMainForm();
+        }
+        private List<string> Generate(int fragments, int samples, int mutationCount, int mutationPower)
         {
             /* Co najmniej jeden ciag musi sie zaczynac od 0.
              * Co najmniej jeden musi isc do samego konca.
@@ -98,22 +103,20 @@ namespace Zaawansowane_programowanie
              * 
              * 
              */
-            int matrixLength = Convert.ToInt32(numericUpDownMFragments.Value);
-            int samples = Convert.ToInt32(numericUpDownNSamples.Value);
-            int consOnesLength = Math.Max((int)Math.Round((decimal)matrixLength / samples, 0),1);
+            int consOnesLength = Math.Max((int)Math.Round((decimal)fragments / samples, 0),1);
             int previousOnes = 0;
             List<string> instance = new List<string>();
             for (int i = 0; i < samples; i++)
             {
                 string sample = "";
-                int maxLength = Convert.ToInt32(0.3 * matrixLength);
+                int maxLength = Convert.ToInt32(randomLengthFactor * fragments);
                 maxLength = Math.Max(maxLength, consOnesLength + 1);
                 int randomLength = rand.Next(consOnesLength+1, maxLength);
-                if(previousOnes >= matrixLength)
+                if(previousOnes >= fragments)
                 {
                     previousOnes = 0;
                 }
-                for (int j = 0; j < matrixLength; j++)
+                for (int j = 0; j < fragments; j++)
                 {
                     if (j >= previousOnes && j <= previousOnes + randomLength)
                     {
@@ -129,13 +132,13 @@ namespace Zaawansowane_programowanie
             }
             //poniższa linijke przenisc do zapisu! lub w ogole usunac, bo nie jest to potrzebne
             //CollectionActions.Shuffle(instance);
-            InsertMutations(ref instance);
+            InsertMutations(ref instance, mutationCount, mutationPower);
             return instance;
         }
 
-        private void InsertMutations(ref List<string> instance)
+        private void InsertMutations(ref List<string> instance, int mutationCount, int mutationPower)
         {
-            int numberOfMutations = (Convert.ToInt32(numericUpDownErrorCount.Value) * instance.Count)/100;
+            int numberOfMutations = (mutationCount * instance.Count)/100;
             List<int> mutatedSamples = new List<int>();
             for(int i=0; i<numberOfMutations; i++)
             {
@@ -145,24 +148,18 @@ namespace Zaawansowane_programowanie
             {
                 string sample = instance.ElementAt(sampleNum);
                 instance.RemoveAt(sampleNum);
-                Mutate(ref sample);
+                Mutate(ref sample, mutationPower);
                 instance.Insert(sampleNum, sample);
             }
         }
 
-        private void Mutate(ref string sample)
+        private void Mutate(ref string sample, int mutationPower)
         {
-            int numberOfMutations = (Convert.ToInt32(numericUpDownMutationPower.Value)*sample.Length)/100;
+            int numberOfMutations = (mutationPower*sample.Length)/100;
             StringBuilder sampleBuilder = new StringBuilder(sample);
             while (numberOfMutations > 0)
             {
-                //DO SPRAWDZENIA
-                //Czy sprawdzadz pozycje graniczne 01?
-                //000001111
-                //zmiana granicznego 0 i granicznej 1 nic nie zmienia
-                //sprawdzac, czy wiersz nie jest pusty
-                //czy kolumna nie bedzie pusta
-                int position = rand.Next(1, sample.Length-1);
+                int position = GetMutationPosition(sample);
                 if (sampleBuilder[position] == '1')
                 {
                     sampleBuilder[position] = '0';
@@ -176,6 +173,29 @@ namespace Zaawansowane_programowanie
             sample = sampleBuilder.ToString();
         }
 
+        private int GetMutationPosition(string sample)
+        { 
+            int oneBegin =0, oneEnd = sample.Length;
+            bool oneMet = false;
+            for(int i=0; i<sample.Length; i++)
+            {
+                if(!oneMet && sample[i] == '1')
+                {
+                    oneMet = true;
+                    oneBegin = i;
+                }else if(oneMet && sample[i] == '0')
+                {
+                    oneEnd = i;
+                    break;
+                }
+            }
+            int position = rand.Next(1, sample.Length - 1);
+            while(position!=oneBegin-2 && position != oneEnd + 2)
+            {
+                position = rand.Next(1, sample.Length - 1);
+            }
+            return position;
+        }
         private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveDataGridView();
@@ -207,7 +227,7 @@ namespace Zaawansowane_programowanie
                 columns.Add(outColumn);
             }
 
-            CollectionActions.Shuffle(columns); //Losowe mieszanie kolumn
+            new CollectionActions().Shuffle(ref columns); //Losowe mieszanie kolumn
             foreach(string col in columns)
             {
                 outLine += col + Environment.NewLine;

@@ -53,6 +53,9 @@
     <Compile Include="AlgorithmForm.Designer.cs">
       <DependentUpon>AlgorithmForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AutomaticTests.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="CollectionActions.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="GeneratorForm.cs">
@@ -72,6 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AlgorithmForm.resx">
       <DependentUpon>AlgorithmForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutomaticTests.resx">
+      <DependentUpon>AutomaticTests.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GeneratorForm.resx">
       <DependentUpon>GeneratorForm.cs</DependentUpon>

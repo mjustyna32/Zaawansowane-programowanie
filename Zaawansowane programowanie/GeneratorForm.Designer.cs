@@ -44,19 +44,15 @@
             this.loadInstanceButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.generatedInstanceLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.generatedInstanceLabel = new System.Windows.Forms.Label();
             this.generateAndSaveButton = new System.Windows.Forms.Button();
             this.toSaveCheckBox = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownMutationPower = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDownMaxHibrid = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.numericUpDownMinHibrid = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownErrorCount = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -76,8 +72,6 @@
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMutationPower)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxHibrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinHibrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownErrorCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNSamples)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMFragments)).BeginInit();
@@ -176,18 +170,18 @@
             this.fragmentsLabel.AutoSize = true;
             this.fragmentsLabel.Location = new System.Drawing.Point(3, 67);
             this.fragmentsLabel.Name = "fragmentsLabel";
-            this.fragmentsLabel.Size = new System.Drawing.Size(155, 17);
+            this.fragmentsLabel.Size = new System.Drawing.Size(123, 17);
             this.fragmentsLabel.TabIndex = 6;
-            this.fragmentsLabel.Text = "Liczba fragmentów (m):";
+            this.fragmentsLabel.Text = "Liczba próbek (n):";
             // 
             // samplesLabel
             // 
             this.samplesLabel.AutoSize = true;
             this.samplesLabel.Location = new System.Drawing.Point(0, 20);
             this.samplesLabel.Name = "samplesLabel";
-            this.samplesLabel.Size = new System.Drawing.Size(123, 17);
+            this.samplesLabel.Size = new System.Drawing.Size(151, 17);
             this.samplesLabel.TabIndex = 5;
-            this.samplesLabel.Text = "Liczba próbek (n):";
+            this.samplesLabel.Text = "Liczba fragmentów (m)";
             // 
             // clearBlankButton
             // 
@@ -265,15 +259,6 @@
             this.panel7.Size = new System.Drawing.Size(904, 123);
             this.panel7.TabIndex = 8;
             // 
-            // generatedInstanceLabel
-            // 
-            this.generatedInstanceLabel.AutoSize = true;
-            this.generatedInstanceLabel.Location = new System.Drawing.Point(14, 0);
-            this.generatedInstanceLabel.Name = "generatedInstanceLabel";
-            this.generatedInstanceLabel.Size = new System.Drawing.Size(96, 17);
-            this.generatedInstanceLabel.TabIndex = 9;
-            this.generatedInstanceLabel.Text = "Brak instancji.";
-            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.generatedInstanceLabel);
@@ -284,6 +269,15 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(229, 123);
             this.panel4.TabIndex = 8;
+            // 
+            // generatedInstanceLabel
+            // 
+            this.generatedInstanceLabel.AutoSize = true;
+            this.generatedInstanceLabel.Location = new System.Drawing.Point(14, 0);
+            this.generatedInstanceLabel.Name = "generatedInstanceLabel";
+            this.generatedInstanceLabel.Size = new System.Drawing.Size(96, 17);
+            this.generatedInstanceLabel.TabIndex = 9;
+            this.generatedInstanceLabel.Text = "Brak instancji.";
             // 
             // generateAndSaveButton
             // 
@@ -321,11 +315,7 @@
             // 
             this.panel6.Controls.Add(this.label2);
             this.panel6.Controls.Add(this.numericUpDownMutationPower);
-            this.panel6.Controls.Add(this.label9);
-            this.panel6.Controls.Add(this.numericUpDownMaxHibrid);
-            this.panel6.Controls.Add(this.label7);
             this.panel6.Controls.Add(this.label8);
-            this.panel6.Controls.Add(this.numericUpDownMinHibrid);
             this.panel6.Controls.Add(this.numericUpDownErrorCount);
             this.panel6.Controls.Add(this.label5);
             this.panel6.Controls.Add(this.label6);
@@ -363,41 +353,6 @@
             0,
             0});
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(4, 205);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(243, 17);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "Maksymalny stopień hybrydyzacji (%)";
-            // 
-            // numericUpDownMaxHibrid
-            // 
-            this.numericUpDownMaxHibrid.Location = new System.Drawing.Point(329, 205);
-            this.numericUpDownMaxHibrid.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxHibrid.Name = "numericUpDownMaxHibrid";
-            this.numericUpDownMaxHibrid.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDownMaxHibrid.TabIndex = 15;
-            this.numericUpDownMaxHibrid.Value = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 166);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(232, 17);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Minimalny stopień hybrydyzacji  (%)";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -406,23 +361,6 @@
             this.label8.Size = new System.Drawing.Size(199, 17);
             this.label8.TabIndex = 13;
             this.label8.Text = "Procent uszkodzonych próbek";
-            // 
-            // numericUpDownMinHibrid
-            // 
-            this.numericUpDownMinHibrid.Location = new System.Drawing.Point(329, 166);
-            this.numericUpDownMinHibrid.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMinHibrid.Name = "numericUpDownMinHibrid";
-            this.numericUpDownMinHibrid.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDownMinHibrid.TabIndex = 12;
-            this.numericUpDownMinHibrid.Value = new decimal(new int[] {
-            70,
-            0,
-            0,
-            0});
             // 
             // numericUpDownErrorCount
             // 
@@ -519,8 +457,6 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMutationPower)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxHibrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinHibrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownErrorCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNSamples)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMFragments)).EndInit();
@@ -548,11 +484,7 @@
         private System.Windows.Forms.Button generateAndSaveButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxHibrid;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinHibrid;
         private System.Windows.Forms.NumericUpDown numericUpDownErrorCount;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;

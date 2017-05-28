@@ -14,7 +14,8 @@ namespace Zaawansowane_programowanie
     public partial class MainForm : Form
     {
         private string filePath;
-        public static List<Column> allColumns;
+        public List<Column> allColumns;
+        
         public MainForm()
         {
             InitializeComponent();
@@ -91,7 +92,7 @@ namespace Zaawansowane_programowanie
                 Convert.ToInt32(numericUpDownIteration.Value), Convert.ToInt32(numericUpDownPopulationSize.Value), 
                 Convert.ToInt32(numericUpDownCrossFactor.Value), Convert.ToInt32(numericUpDownBests.Value), 
                 Convert.ToInt32(numericUpDownCrossInterval.Value), Convert.ToInt32(numericUpDownMutationCount.Value), 
-                Convert.ToInt32(numericUpDownMutationPower.Value), Thread.CurrentThread);
+                Convert.ToInt32(numericUpDownMutationPower.Value));
             if (checkBoxCycles.Checked)
             {
                 algorithmForm.CyclesEnabled = true;
@@ -116,6 +117,12 @@ namespace Zaawansowane_programowanie
                 numericUpDownCyclesSolutionLength.Enabled = false;
                 numericUpDownCyclesIteration.Enabled = false;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AutomaticTests auto = new AutomaticTests();
+            auto.Run();
         }
     }
 }
