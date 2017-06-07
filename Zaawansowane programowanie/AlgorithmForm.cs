@@ -22,7 +22,6 @@ namespace Zaawansowane_programowanie
         private float mutationPowerFactor = (float)0.2;
         private volatile Individual bestIndividual = null;
         private bool exterminationCycle=false;
-        private float exterminationFactor = (float)0.5;
         private float percentOfIterationCycle = (float)0.1;
         private float percentOfSolutionLenCycle = (float)0.4;
         private int lastChartRefresh = 0;
@@ -65,7 +64,7 @@ namespace Zaawansowane_programowanie
         {
             get { return PopulationSize; }
         }
-        public AlgorithmForm(List<Column> columns, int iter, int popSize, int crossSize, int bestsParticipant,int crossInterval, int mutationCount, int mutationPower, string text = "Algorytm", float extermFactor = (float)0.5)
+        public AlgorithmForm(List<Column> columns, int iter, int popSize, int crossSize, int bestsParticipant,int crossInterval, int mutationCount, int mutationPower, string text = "Algorytm")
         {
             InitializeComponent();
             allInstanceColumns = CloneColumnsList(columns);
@@ -79,7 +78,6 @@ namespace Zaawansowane_programowanie
             crossingIntervalFactor = (float)crossInterval / 100;
             mutationCountFactor = (float)mutationCount /100;
             mutationPowerFactor = (float)mutationPower /100;
-            exterminationFactor = extermFactor;
             this.Text = text;
         }
        
@@ -416,8 +414,8 @@ namespace Zaawansowane_programowanie
 
             //DO POPRAWY, DODAWAĆ KOPIE NAJLEPSZEGO
             //zabezpieczyc na wypadek gdyby bylo zbyt malo ponizej sredniej
-            AddBestCopies(ref afterCorssing, bestIndCount);
-            //MakeCrossedPopulation(ref afterCorssing, averageValue, bestIndCount);
+            //AddBestCopies(ref afterCorssing, bestIndCount);
+            MakeCrossedPopulation(ref afterCorssing, averageValue, bestIndCount);
             MakeCrossedPopulation(ref afterCorssing, averageValue*2, outPopulationSize); //*2 zrobic jako parametr
             return afterCorssing;
         }

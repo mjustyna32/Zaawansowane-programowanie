@@ -58,9 +58,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.startButton = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -461,6 +461,16 @@
             this.panel4.Size = new System.Drawing.Size(886, 100);
             this.panel4.TabIndex = 1;
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(12, 20);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(128, 68);
+            this.button3.TabIndex = 1;
+            this.button3.Text = "Testy";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // panel5
             // 
             this.panel5.Controls.Add(this.startButton);
@@ -480,16 +490,6 @@
             this.startButton.Text = "Start";
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(12, 20);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(128, 68);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Testy";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // MainForm
             // 

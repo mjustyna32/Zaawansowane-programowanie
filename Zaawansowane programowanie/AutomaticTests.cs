@@ -3,82 +3,90 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Zaawansowane_programowanie
 {
     class AutomaticTests:MainForm
     {
         int samples = 10;
-        int fragments = 20;
-        int errSamplesPerc = 0;
-        int errFragmentPerc = 0;
+        int fragments = 10;
+        int iter = 400;
+        int errorCount = 0;
+        string errors = "errors";
         bool cycles = false;
         int repeats = 10;
         public void Run()
         {
+            errors += errorCount;
             GeneratorForm gen = new GeneratorForm(this);
             ThreadStart test1 = new ThreadStart(Test1);
+            ThreadStart test6 = new ThreadStart(Test6);
             ThreadStart test2 = new ThreadStart(Test2);
             ThreadStart test3 = new ThreadStart(Test3);
             ThreadStart test4 = new ThreadStart(Test4);
+            ThreadStart test0 = new ThreadStart(Test0);
+            Thread thr0 = new Thread(test0);
+            Thread thr6 = new Thread(test6);
             Thread thr1 = new Thread(test1);
             Thread thr2 = new Thread(test2);
             Thread thr3 = new Thread(test3);
             Thread thr4 = new Thread(test4);
+            thr0.IsBackground = true;
+            thr6.IsBackground = true;
             thr1.IsBackground = true;
             thr2.IsBackground = true;
             thr3.IsBackground = true;
             thr4.IsBackground = true;
-            thr1.Start();
-            thr2.Start();
-            thr3.Start();
+            //thr0.Start();
+            //thr6.Start();
+            //thr1.Start();
+            //thr2.Start();
+            //thr3.Start();
             thr4.Start();
-
-            //Test1();
-            //Test2();
-            //Test3();
         }
 
 
         private void Test0()
         {
-            //mutation Count
-            //Siła 30%
-            int iterations = 400;
-            int mutationBegin = 10;
-            int mutationCount = mutationBegin;
-            int mutationPower = 30;
-            int mutationEnd = 100;
-            int step = 10;
+            // Liczba wierszy
+            int frag = 10;
+            int fragBegin = 10;
+            int fragEnd = 50;
+            int step = 5;
             int popSize = 50;
             int crossSize = 4;
             int bestParticipant = 10;
             int crossInterval = 40;
+            int mutationCount = 20;
+            int mutationPower = 10;
 
             int cyclesIterationPercent = 10;
             int cyclesSolutionLength = 40;
-            float exterminationFact = (float)0.4;
 
             //string file = "ExtermFact" + iterBegin + "_" + iterEnd+"_size"+fragments+"x"+samples+"_"+exterminationFact+".csv";
-            string file = "MutationCount" + mutationCount + "_" + mutationEnd + "_size" + fragments + "x" + samples + ".csv";
+            string file = "IterResult" + fragEnd + "_" + fragEnd + "_size" + fragments + "x" + samples + "_" + iter + ".csv";
             List<List<int>> summaryResults = new List<List<int>>();
-            for (; mutationCount <= mutationEnd; mutationCount += step)
+            for (frag = fragBegin; frag <= fragEnd; frag += step)
             {
                 List<int> iterationResults = new List<int>();
                 for (int i = 0; i < repeats; i++)
                 {
                     AutomaticTests at = new AutomaticTests();
                     GeneratorForm gen = new GeneratorForm(at);
-                    gen.TestsGenerator(fragments, samples, errSamplesPerc, errFragmentPerc);
+                    gen.TestsGenerator(frag,samples, errorCount);
                     AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
-                    iterations, popSize, crossSize, bestParticipant, crossInterval,
-                    mutationCount, mutationPower, "MutCount -> " + mutationCount + " T0| " + i + "/" + repeats, exterminationFact);
+                    iter, popSize, crossSize, bestParticipant, crossInterval,
+                    mutationCount, mutationPower, "Result-> " + frag + " T1| " + i + "/" + repeats);
                     algorithmForm.CyclesEnabled = cycles;
                     algorithmForm.CycleIterationPercent = cyclesIterationPercent;
                     algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
                     algorithmForm.Show();
+                    Stopwatch watch = Stopwatch.StartNew();
                     algorithmForm.RunAlgorithm();
+                    watch.Stop();
                     iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
+                    //iterationResults.Add(Convert.ToInt32(watch.ElapsedMilliseconds/1000));
                     algorithmForm.Close();
                     algorithmForm.Dispose();
                     gen.Dispose();
@@ -86,44 +94,90 @@ namespace Zaawansowane_programowanie
                 }
                 summaryResults.Add(iterationResults);
             }
-            SaveResults(file, summaryResults, mutationBegin, mutationEnd, step);
+            SaveResults(file, summaryResults, fragBegin, fragEnd, step);
         }
 
-
-        //Macierz 20x10 - bez błędów
         private void Test1()
         {
-            //Mutation Power //30%populacji
-            int iterations = 400;
-            int mutationBegin = 10;
-            int mutationCount = 30;
-            int mutationPower = mutationBegin;
-            int mutationEnd = 100;
-            int step = 10;
+            // Liczba wierszy
+            int frag = 10;
+            int fragBegin = 10;
+            int fragEnd = 50;
+            int step = 5;
             int popSize = 50;
             int crossSize = 4;
             int bestParticipant = 10;
             int crossInterval = 40;
-           
+            int mutationCount = 20;
+            int mutationPower = 10;
+
             int cyclesIterationPercent = 10;
             int cyclesSolutionLength = 40;
-            float exterminationFact = (float)0.4;
 
             //string file = "ExtermFact" + iterBegin + "_" + iterEnd+"_size"+fragments+"x"+samples+"_"+exterminationFact+".csv";
-            string file = "MutationPower" + mutationPower + "_" + mutationEnd + "_size" + fragments + "x" + samples + ".csv";
+            string file = "Sampless" + fragEnd + "_" + fragEnd + "_size" + fragments + "x" + samples + "_" + iter + ".csv";
             List<List<int>> summaryResults = new List<List<int>>();
-            for(; mutationPower<=mutationEnd; mutationPower += step)
+            for (frag = fragBegin; frag <= fragEnd; frag += step)
             {
                 List<int> iterationResults = new List<int>();
                 for (int i = 0; i < repeats; i++)
                 {
                     AutomaticTests at = new AutomaticTests();
                     GeneratorForm gen = new GeneratorForm(at);
-                    gen.TestsGenerator(fragments, samples, errSamplesPerc, errFragmentPerc);
+                    gen.TestsGenerator(fragments, frag, errorCount);
                     AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
-                    iterations, popSize, crossSize, bestParticipant, crossInterval, 
-                    mutationCount, mutationPower, "iter -> " + mutationPower + " T1| " + i + "/" + repeats, exterminationFact);
+                    iter, popSize, crossSize, bestParticipant, crossInterval,
+                    mutationCount, mutationPower, "Result-> " + frag + " T1| " + i + "/" + repeats);
                     algorithmForm.CyclesEnabled = cycles;
+                    algorithmForm.CycleIterationPercent = cyclesIterationPercent;
+                    algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
+                    algorithmForm.Show();
+                    Stopwatch watch = Stopwatch.StartNew();
+                    algorithmForm.RunAlgorithm();
+                    watch.Stop();
+                    //iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
+                    iterationResults.Add(Convert.ToInt32(watch.ElapsedMilliseconds/1000));
+                    algorithmForm.Close();
+                    algorithmForm.Dispose();
+                    gen.Dispose();
+                    at.Dispose();
+                }
+                summaryResults.Add(iterationResults);
+            }
+            SaveResults(file, summaryResults, fragBegin, fragEnd, step);
+        }
+        private void Test6()
+        {
+            //Cykle zagłady
+            int iterations = 5000;
+            int cyclesLengthBegin = 10;
+            int cyclesLengthEnd = 100;
+            int step = 10;
+            int popSize = 50;
+            int crossSize = 4;
+            int bestParticipant = 10;
+            int crossInterval = 40;
+            int mutationCount = 20;
+            int mutationPower = 10;
+
+            int cyclesIterationPercent = 10;
+            int cyclesSolutionLength = 40;
+
+            //string file = "ExtermFact" + iterBegin + "_" + iterEnd+"_size"+fragments+"x"+samples+"_"+exterminationFact+".csv";
+            string file = "CyclesLength" +  cyclesLengthBegin + "_" + cyclesLengthEnd + "_size" + fragments + "x" + samples + "_" + iterations + ".csv";
+            List<List<int>> summaryResults = new List<List<int>>();
+            for (cyclesSolutionLength = cyclesLengthBegin; cyclesSolutionLength <= cyclesLengthEnd; cyclesSolutionLength += step)
+            {
+                List<int> iterationResults = new List<int>();
+                for (int i = 0; i < repeats; i++)
+                {
+                    AutomaticTests at = new AutomaticTests();
+                    GeneratorForm gen = new GeneratorForm(at);
+                    gen.TestsGenerator(fragments, samples, errorCount);
+                    AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
+                    iterations, popSize, crossSize, bestParticipant, crossInterval,
+                    mutationCount, mutationPower, "ExtermLength -> " + mutationPower + " T6| " + i + "/" + repeats);
+                    algorithmForm.CyclesEnabled = !cycles;
                     algorithmForm.CycleIterationPercent = cyclesIterationPercent;
                     algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
                     algorithmForm.Show();
@@ -136,145 +190,149 @@ namespace Zaawansowane_programowanie
                 }
                 summaryResults.Add(iterationResults);
             }
-            SaveResults(file, summaryResults, mutationBegin, mutationEnd, step);
+            SaveResults(file, summaryResults, cyclesLengthBegin, cyclesLengthEnd, step);
         }
 
         private void Test2()
         {
-            //wspolczynnik krzyzowania
-            int crossBegin = 2;
-            int crossSize = crossBegin;
-            int crossEnd = 12;
-            int step = 1;
-            int iterations = 400;
+            int iterBegin = 6000;
+            int iterEnd = 10000;
+            int step = 1000;
             int popSize = 50;
+            int crossSize = 4;
             int bestParticipant = 10;
             int crossInterval = 40;
             int mutationCount = 20;
             int mutationPower = 10;
+            int increase = 20;
             int cyclesIterationPercent = 10;
             int cyclesSolutionLength = 40;
-            float exterminationFact = (float)0.5;
-
-            string file = "CrossFactor" + crossBegin+ "_" + crossEnd+ "_size" + fragments + "x" + samples + ".csv";
-            List<List<int>> summaryResults = new List<List<int>>();
-            for (;crossSize<=crossEnd; crossSize+= step)
+            for (int error = 0; error <= 0; error+=8)
             {
-                List<int> iterationResults = new List<int>();
-                for (int i = 0; i < repeats; i++)
+                int frag = fragments + increase;
+                string file = "Iter" + error + iterBegin + "_" + iterEnd + "_size" + frag + "x" + samples + "_" + iterEnd + ".csv";
+                List<List<int>> summaryResults = new List<List<int>>();
+                for (int iterations = iterBegin; iterations <= iterEnd; iterations += step)
                 {
-                    AutomaticTests at = new AutomaticTests();
-                    GeneratorForm gen = new GeneratorForm(at);
-                    gen.TestsGenerator(fragments, samples, errSamplesPerc, errFragmentPerc);
-                    AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
-                    iterations, popSize, crossSize, bestParticipant, crossInterval,
-                    mutationCount, mutationPower, "CrossSize -> " + crossSize + " T2| " + i + "/" + repeats, exterminationFact);
-                    algorithmForm.CyclesEnabled = cycles;
-                    algorithmForm.CycleIterationPercent = cyclesIterationPercent;
-                    algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
-                    algorithmForm.Show();
-                    algorithmForm.RunAlgorithm();
-                    iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
-                    algorithmForm.Close();
-                    algorithmForm.Dispose();
-                    gen.Dispose();
-                    at.Dispose();
+                    List<int> iterationResults = new List<int>();
+                    for (int i = 0; i < repeats; i++)
+                    {
+                        AutomaticTests at = new AutomaticTests();
+                        GeneratorForm gen = new GeneratorForm(at);
+                        gen.TestsGenerator(fragments + increase, samples, error);
+                        AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
+                        iterations, popSize, crossSize, bestParticipant, crossInterval,
+                        mutationCount, mutationPower, "iter40 -> " + error + " T4| " + i + "/" + repeats);
+                        algorithmForm.CyclesEnabled = cycles;
+                        algorithmForm.CycleIterationPercent = cyclesIterationPercent;
+                        algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
+                        algorithmForm.Show();
+                        algorithmForm.RunAlgorithm();
+                        iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
+                        algorithmForm.Close();
+                        algorithmForm.Dispose();
+                        gen.Dispose();
+                        at.Dispose();
+                    }
+                    summaryResults.Add(iterationResults);
                 }
-                summaryResults.Add(iterationResults);
+                SaveResults(file, summaryResults, iterBegin, iterEnd, step);
             }
-            SaveResults(file, summaryResults, crossBegin, crossEnd, step);
         }
 
         private void Test3()
         {
-            //rozmiar przedzialu krzyzowania
-            int iterBegin = 300;
-            int iterEnd = 3000;
-            int step = 300;
+            int iterBegin = 100;
+            int iterEnd = 8000;
+            int step = 100;
             int popSize = 50;
             int crossSize = 4;
             int bestParticipant = 10;
             int crossInterval = 40;
             int mutationCount = 20;
             int mutationPower = 10;
-            int cyclesIterationPercent = 10;
-            int cyclesSolutionLength = 40;
-            float exterminationFact = (float)0.6;
-
-            string file = "ExtermFact" + iterBegin + "_" + iterEnd + "_size" + fragments + "x" + samples + "_" + exterminationFact + ".csv";
-            List<List<int>> summaryResults = new List<List<int>>();
-            for (int iterations = iterBegin; iterations <= iterEnd; iterations += step)
+            int increase = 10;
+            int cyclesIterationPercent = 25;
+            int cyclesSolutionLength = 80;
+            for (int error = 0; error <= 0; error+=5)
             {
-                List<int> iterationResults = new List<int>();
-                for (int i = 0; i < repeats; i++)
+                int frag = fragments + increase;
+                string file = "2IterErr" + error + iterBegin + "_" + iterEnd + "_size" + frag + "x" + samples + "_" + ".csv";
+                List<List<int>> summaryResults = new List<List<int>>();
+                for (int iterations = iterBegin; iterations <= iterEnd; iterations += step)
                 {
-                    AutomaticTests at = new AutomaticTests();
-                    GeneratorForm gen = new GeneratorForm(at);
-                    gen.TestsGenerator(fragments, samples, errSamplesPerc, errFragmentPerc);
-                    AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
-                    iterations, popSize, crossSize, bestParticipant, crossInterval,
-                    mutationCount, mutationPower, "iter -> " + iterations + " T3| " + i + "/" + repeats, exterminationFact);
-                    algorithmForm.CyclesEnabled = cycles;
-                    algorithmForm.CycleIterationPercent = cyclesIterationPercent;
-                    algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
-                    algorithmForm.Show();
-                    algorithmForm.RunAlgorithm();
-                    iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
-                    algorithmForm.Close();
-                    algorithmForm.Dispose();
-                    gen.Dispose();
-                    at.Dispose();
+                    List<int> iterationResults = new List<int>();
+                    for (int i = 0; i < repeats; i++)
+                    {
+                        AutomaticTests at = new AutomaticTests();
+                        GeneratorForm gen = new GeneratorForm(at);
+                        gen.TestsGenerator(fragments+increase, samples, error);
+                        AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
+                        iterations, popSize, crossSize, bestParticipant, crossInterval,
+                        mutationCount, mutationPower, "iter30 -> " + error + " T4| " + i + "/" + repeats);
+                        algorithmForm.CyclesEnabled = cycles;
+                        algorithmForm.CycleIterationPercent = cyclesIterationPercent;
+                        algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
+                        algorithmForm.Show();
+                        algorithmForm.RunAlgorithm();
+                        iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
+                        algorithmForm.Close();
+                        algorithmForm.Dispose();
+                        gen.Dispose();
+                        at.Dispose();
+                    }
+                    summaryResults.Add(iterationResults);
                 }
-                summaryResults.Add(iterationResults);
+                SaveResults(file, summaryResults, iterBegin, iterEnd, step);
             }
-            SaveResults(file, summaryResults, iterBegin, iterEnd, step);
         }
 
         private void Test4()
         {
-            //udzial najlepszych
+            //Iteracje
             int iterBegin = 300;
-            int iterEnd = 3000;
-            int step = 300;
+            int iterEnd = 1000;
+            int step = 100;
             int popSize = 50;
             int crossSize = 4;
             int bestParticipant = 10;
-            int crossInterval = 40;
+            int crossInterval = 30;
             int mutationCount = 20;
             int mutationPower = 10;
-            int cyclesIterationPercent = 10;
-            int cyclesSolutionLength = 40;
-            float exterminationFact = (float)0.7;
-
-            string file = "ExtermFact" + iterBegin + "_" + iterEnd + "_size" + fragments + "x" + samples + "_" + exterminationFact + ".csv";
-            List<List<int>> summaryResults = new List<List<int>>();
-            for (int iterations = iterBegin; iterations <= iterEnd; iterations += step)
+            int cyclesIterationPercent = 25;
+            int cyclesSolutionLength = 80;
+            for (int error = 0; error <= 6; error+=2)
             {
-                List<int> iterationResults = new List<int>();
-                for (int i = 0; i < repeats; i++)
+                string file = "Iter" + error + iterBegin + "_" + iterEnd + "_size" + fragments + "x" + samples + "_" +iterEnd+ ".csv";
+                List<List<int>> summaryResults = new List<List<int>>();
+                for (int iterations = iterBegin; iterations <= iterEnd; iterations += step)
                 {
-                    AutomaticTests at = new AutomaticTests();
-                    GeneratorForm gen = new GeneratorForm(at);
-                    gen.TestsGenerator(fragments, samples, errSamplesPerc, errFragmentPerc);
-                    AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
-                    iterations, popSize, crossSize, bestParticipant, crossInterval,
-                    mutationCount, mutationPower, "iter -> " + iterations + " T4| " + i + "/" + repeats, exterminationFact);
-                    algorithmForm.CyclesEnabled = cycles;
-                    algorithmForm.CycleIterationPercent = cyclesIterationPercent;
-                    algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
-                    algorithmForm.Show();
-                    algorithmForm.RunAlgorithm();
-                    iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
-                    algorithmForm.Close();
-                    algorithmForm.Dispose();
-                    gen.Dispose();
-                    at.Dispose();
+                    List<int> iterationResults = new List<int>();
+                    for (int i = 0; i < repeats; i++)
+                    {
+                        AutomaticTests at = new AutomaticTests();
+                        GeneratorForm gen = new GeneratorForm(at);
+                        gen.TestsGenerator(fragments, samples, error);
+                        AlgorithmForm algorithmForm = new AlgorithmForm(at.allColumns,
+                        iterations, popSize, crossSize, bestParticipant, crossInterval,
+                        mutationCount, mutationPower, "iter20 -> " + iterations + " T4| " + i + "/" + repeats);
+                        algorithmForm.CyclesEnabled = cycles;
+                        algorithmForm.CycleIterationPercent = cyclesIterationPercent;
+                        algorithmForm.CycleSolutionLenPercent = cyclesSolutionLength;
+                        algorithmForm.Show();
+                        algorithmForm.RunAlgorithm();
+                        iterationResults.Add(algorithmForm.BestIndividual.SolutionValue);
+                        algorithmForm.Close();
+                        algorithmForm.Dispose();
+                        gen.Dispose();
+                        at.Dispose();
+                    }
+                    summaryResults.Add(iterationResults);
                 }
-                summaryResults.Add(iterationResults);
+                SaveResults(file, summaryResults, iterBegin, iterEnd, step);
             }
-            SaveResults(file, summaryResults, iterBegin, iterEnd, step);
-
         }
+
         public void SaveResults(string file, List<List<int>> results, int headerBegin, int headerEnd, int step)
         {
             System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\Users\\Marek\\Documents\\Testy_ZP\\"+file);
