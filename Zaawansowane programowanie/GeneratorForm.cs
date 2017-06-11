@@ -15,7 +15,7 @@ namespace Zaawansowane_programowanie
         Random rand = new Random();
         MainForm mainForm;
         private List<string> instance;
-        private float randomLengthFactor = (float)0.7;
+        private float randomLengthFactor = (float)0.8;
         public GeneratorForm(MainForm obj)
         { 
             InitializeComponent();
@@ -29,16 +29,16 @@ namespace Zaawansowane_programowanie
             if (toSaveCheckBox.Checked)
                 //zrobić zapis string'ów instance
                 SaveGeneratedInstance();
-            else
-                AddInstanceToMainForm(); //laduje do mainForm
+            AddInstanceToMainForm(); //laduje do mainForm
             generatedInstanceLabel.Text = "Wygenerowano instancję";
         }
         private void SaveGeneratedInstance()
         {
             saveFileDialog1.Filter = "Plik tekstowy (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
             string outputInstance = "";
-            new CollectionActions().Shuffle(ref instance);
-            foreach(string s in GetTransponedStringList(instance))
+            List<string> transponendInstance = GetTransponedStringList(instance);
+            new CollectionActions().Shuffle(ref transponendInstance);
+            foreach (string s in transponendInstance)
             {
                 outputInstance += s + Environment.NewLine;
             }
@@ -76,9 +76,9 @@ namespace Zaawansowane_programowanie
 
             return columns;
         }
-        public void TestsGenerator(int fragments, int samples, int mutationCount)
+        public void TestsGenerator(int samples, int fragments, int mutationCount)
         {
-            instance = Generate(fragments, samples, mutationCount);
+            instance = Generate(samples, fragments, mutationCount);
             AddInstanceToMainForm();
         }
         private List<string> Generate(int samples, int fragments, int mutationCount)
@@ -186,7 +186,7 @@ namespace Zaawansowane_programowanie
 
                 if (onesMet == 2)
                 {
-                    oneBegin = i - 2;
+                    oneBegin = i - 1;
                 }
             }
             int position = rand.Next(1, sample.Length - 1);

@@ -22,7 +22,7 @@ namespace Zaawansowane_programowanie
         private float mutationPowerFactor = (float)0.2;
         private volatile Individual bestIndividual = null;
         private bool exterminationCycle=false;
-        private float percentOfIterationCycle = (float)0.1;
+        private int numberOfIterationBeforeCycle = 1000;
         private float percentOfSolutionLenCycle = (float)0.4;
         private int lastChartRefresh = 0;
         public bool CyclesEnabled
@@ -35,10 +35,10 @@ namespace Zaawansowane_programowanie
             get { return bestIndividual; }
         }
 
-        public int CycleIterationPercent
+        public int CycleIterationsCount
         {
-            get { return Convert.ToInt32(percentOfIterationCycle * 100); }
-            set { percentOfIterationCycle = (float)value / 100; }
+            get { return numberOfIterationBeforeCycle; }
+            set { numberOfIterationBeforeCycle = value; }
         }
         public int CycleSolutionLenPercent
         {
@@ -225,7 +225,7 @@ namespace Zaawansowane_programowanie
 
         private bool IterationElapsed(int lastBestFound, int i)
         {
-            int interval = Convert.ToInt32(iterations * percentOfIterationCycle);
+            int interval = Convert.ToInt32(iterations * numberOfIterationBeforeCycle);
             if (i - lastBestFound > interval)
                 return true;
             else
@@ -325,7 +325,7 @@ namespace Zaawansowane_programowanie
                 {
                    foreach(int col in bestIndividual.Columns)
                     {
-                       outLine+= GetColumnObjectAt(col).GetRowValueAtInt(row) + " ";
+                       outLine+= GetColumnObjectAt(col).GetRowValueAtInt(row) + "  ";
                     }
                     outLine += Environment.NewLine;
 

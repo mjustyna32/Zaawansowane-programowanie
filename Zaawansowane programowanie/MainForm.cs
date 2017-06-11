@@ -23,23 +23,23 @@ namespace Zaawansowane_programowanie
 
         private void loadFileButton_Click(object sender, EventArgs e)
         {
-            /*
+            
             openFileDialog1.Filter = "Pliki tesktowe (*.txt)|*.txt|Wszystkie pliki (*.*)|*.*";
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
                 StreamReader sr = new StreamReader(filePath);
-                ReadFile(sr);
+                ReadFile(sr, filePath);
                 labelFileName.Text = filePath;
                 startButton.Enabled = true;
                 sr.Close();
             }
-            */
+            
             //C:\Users\Marek\Documents\tescik.txt
-            string fileName = "C:\\Users\\Marek\\Documents\\20x20.txt";
-            StreamReader sr = new StreamReader(fileName);
-            ReadFile(sr, fileName);
-            sr.Close();
+            //string fileName = "C:\\Users\\Marek\\Documents\\20x20.txt";
+            //StreamReader sr = new StreamReader(fileName);
+            //ReadFile(sr, fileName);
+            //sr.Close();
         }
 
         private void ReadFile(StreamReader reader, string source)
@@ -96,7 +96,7 @@ namespace Zaawansowane_programowanie
             if (checkBoxCycles.Checked)
             {
                 algorithmForm.CyclesEnabled = true;
-                algorithmForm.CycleIterationPercent = Convert.ToInt32(numericUpDownCyclesIteration.Value);
+                algorithmForm.CycleIterationsCount = Convert.ToInt32(numericUpDownCyclesIteration.Value);
                 algorithmForm.CycleSolutionLenPercent = Convert.ToInt32(numericUpDownCyclesSolutionLength.Value);
             }
             ThreadStart startingThreadDelegate = new ThreadStart(algorithmForm.RunAlgorithm);
@@ -123,6 +123,11 @@ namespace Zaawansowane_programowanie
         {
             AutomaticTests auto = new AutomaticTests();
             auto.Run();
+        }
+
+        private void numericUpDownIteration_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDownCyclesIteration.Maximum = numericUpDownIteration.Value;
         }
     }
 }

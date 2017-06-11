@@ -35,6 +35,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.saveButton = new System.Windows.Forms.Button();
             this.fragmentsLabel = new System.Windows.Forms.Label();
             this.samplesLabel = new System.Windows.Forms.Label();
@@ -63,6 +64,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel3.SuspendLayout();
+            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fragmentsCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.samplesCount)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -139,7 +141,7 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.saveButton);
+            this.panel3.Controls.Add(this.panel5);
             this.panel3.Controls.Add(this.fragmentsLabel);
             this.panel3.Controls.Add(this.samplesLabel);
             this.panel3.Controls.Add(this.clearBlankButton);
@@ -152,9 +154,18 @@
             this.panel3.Size = new System.Drawing.Size(239, 494);
             this.panel3.TabIndex = 0;
             // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.saveButton);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel5.Location = new System.Drawing.Point(0, 394);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(239, 100);
+            this.panel5.TabIndex = 7;
+            // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(6, 422);
+            this.saveButton.Location = new System.Drawing.Point(3, 17);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(230, 67);
             this.saveButton.TabIndex = 1;
@@ -373,7 +384,7 @@
             this.numericUpDownMFragments.Size = new System.Drawing.Size(52, 22);
             this.numericUpDownMFragments.TabIndex = 7;
             this.numericUpDownMFragments.Value = new decimal(new int[] {
-            3,
+            10,
             0,
             0,
             0});
@@ -395,7 +406,7 @@
             this.numericUpDownNSamples.Size = new System.Drawing.Size(52, 22);
             this.numericUpDownNSamples.TabIndex = 8;
             this.numericUpDownNSamples.Value = new decimal(new int[] {
-            3,
+            10,
             0,
             0,
             0});
@@ -417,6 +428,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fragmentsCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.samplesCount)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -463,5 +475,6 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Label generatedInstanceLabel;
+        private System.Windows.Forms.Panel panel5;
     }
 }

@@ -55,10 +55,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.startButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -157,7 +155,6 @@
             this.panel3.Controls.Add(this.label5);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.label3);
-            this.panel3.Controls.Add(this.button2);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.panel4);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -192,7 +189,7 @@
             this.numericUpDownCyclesSolutionLength.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownCyclesSolutionLength.TabIndex = 22;
             this.numericUpDownCyclesSolutionLength.Value = new decimal(new int[] {
-            40,
+            80,
             0,
             0,
             0});
@@ -200,11 +197,16 @@
             // numericUpDownCyclesIteration
             // 
             this.numericUpDownCyclesIteration.Location = new System.Drawing.Point(754, 83);
+            this.numericUpDownCyclesIteration.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numericUpDownCyclesIteration.Name = "numericUpDownCyclesIteration";
             this.numericUpDownCyclesIteration.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownCyclesIteration.TabIndex = 21;
             this.numericUpDownCyclesIteration.Value = new decimal(new int[] {
-            10,
+            500,
             0,
             0,
             0});
@@ -214,16 +216,16 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(442, 85);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(264, 17);
+            this.label10.Size = new System.Drawing.Size(256, 17);
             this.label10.TabIndex = 20;
-            this.label10.Text = "Procent iteracji bez poprawy rozwiązania";
+            this.label10.Text = "Liczba iteracji bez poprawy rozwiązania";
             // 
             // checkBoxCycles
             // 
             this.checkBoxCycles.AutoSize = true;
             this.checkBoxCycles.Checked = true;
             this.checkBoxCycles.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCycles.Location = new System.Drawing.Point(589, 45);
+            this.checkBoxCycles.Location = new System.Drawing.Point(754, 38);
             this.checkBoxCycles.Name = "checkBoxCycles";
             this.checkBoxCycles.Size = new System.Drawing.Size(117, 21);
             this.checkBoxCycles.TabIndex = 19;
@@ -274,10 +276,11 @@
             this.numericUpDownIteration.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownIteration.TabIndex = 15;
             this.numericUpDownIteration.Value = new decimal(new int[] {
-            100,
+            1200,
             0,
             0,
             0});
+            this.numericUpDownIteration.ValueChanged += new System.EventHandler(this.numericUpDownIteration_ValueChanged);
             // 
             // label8
             // 
@@ -305,7 +308,7 @@
             this.numericUpDownPopulationSize.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownPopulationSize.TabIndex = 13;
             this.numericUpDownPopulationSize.Value = new decimal(new int[] {
-            50,
+            60,
             0,
             0,
             0});
@@ -358,7 +361,7 @@
             this.numericUpDownMutationPower.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownMutationPower.TabIndex = 10;
             this.numericUpDownMutationPower.Value = new decimal(new int[] {
-            20,
+            30,
             0,
             0,
             0});
@@ -370,7 +373,7 @@
             this.numericUpDownMutationCount.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownMutationCount.TabIndex = 9;
             this.numericUpDownMutationCount.Value = new decimal(new int[] {
-            10,
+            30,
             0,
             0,
             0});
@@ -392,7 +395,7 @@
             this.numericUpDownCrossInterval.Size = new System.Drawing.Size(120, 22);
             this.numericUpDownCrossInterval.TabIndex = 8;
             this.numericUpDownCrossInterval.Value = new decimal(new int[] {
-            60,
+            30,
             0,
             0,
             0});
@@ -433,15 +436,6 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Współczynnik krzyżowania";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(728, 6);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(146, 60);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Ustaw domyślnie";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -453,23 +447,12 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.button3);
             this.panel4.Controls.Add(this.panel5);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel4.Location = new System.Drawing.Point(0, 269);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(886, 100);
             this.panel4.TabIndex = 1;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(12, 20);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(128, 68);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Testy";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // panel5
             // 
@@ -532,7 +515,6 @@
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
@@ -554,7 +536,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownCyclesIteration;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox checkBoxCycles;
-        private System.Windows.Forms.Button button3;
     }
 }
 
