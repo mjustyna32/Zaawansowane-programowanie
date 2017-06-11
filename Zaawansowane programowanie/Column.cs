@@ -21,10 +21,19 @@ namespace Zaawansowane_programowanie
         {
             get { return rows.Count; }
         }
-        public bool getRowValueAt(int index)
+        public bool GetRowValueAt(int index)
         {
             return rows.ElementAt(index);
         }
+
+        public int GetRowValueAtInt(int index)
+        {
+            if (rows.ElementAt(index))
+                return 1;
+            else
+                return 0;
+        }
+
         public int ColumnIndex
         {
             get { return columnIndex; }

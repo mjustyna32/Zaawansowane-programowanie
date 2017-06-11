@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 namespace Zaawansowane_programowanie
 {
     public class Individual
-    {
+    { 
         private List<int> columnsPermutation;
         private List<int> columnsToDelete;
         private AlgorithmForm algorithmObject;
         public int SolutionValue
         {
-            get { return columnsToDelete.Count; }
+            get {
+                return columnsToDelete.Count;
+            }
             set { }
         }
         public List<int> ColumnsToDelete
@@ -27,28 +29,25 @@ namespace Zaawansowane_programowanie
         public Individual(List<int> columnsIndexes, AlgorithmForm obj)
         {
             columnsPermutation = columnsIndexes;
-            columnsToDelete = new List<int>();
             algorithmObject = obj;
         }
 
-        public bool areConsecutiveColumns(Column col1, Column col2)
+        public Individual GetObjectCopy()
         {
-            List<bool> column1Rows = col1.GetRows;
-            List<bool> column2Rows = col2.GetRows;
-            for(int i=0; i<column1Rows.Count; i++)
+            List<int> columns = new List<int>();
+            foreach (int col in columnsPermutation)
             {
-                if(column1Rows[i] == true && column2Rows[i] == true)
-                {
-                    return true;
-                }
+                columns.Add(col);
             }
-            return false;
+            Individual ind = new Individual(columns, algorithmObject);
+            ind.CheckSolution();
+            return ind;
         }
-
         public int CheckSolution()
         {
+            columnsToDelete = new List<int>();
             int rowCount = algorithmObject.GetColumnObjectAt(0).GetRowsCount;
-            for(int rowIndex =0; rowIndex<rowCount; rowIndex++)
+            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
             {
                 RemoveColumnsFromRow(rowIndex);
             }
@@ -59,22 +58,92 @@ namespace Zaawansowane_programowanie
         {
             bool onesStarted = false; //określa, czy napotkano juz pierwszą jedynkę w macierzy
             //policzyc ile jest jedynek w wierszu
+            
             int onesInRow = algorithmObject.GetOnesCountInRow(rowIndex);
+            RemoveSingleOnes(rowIndex, onesInRow);
             foreach (int columnIndex in columnsPermutation)
             {
                 Column column = algorithmObject.GetColumnObjectAt(columnIndex);
-                if (!onesStarted && column.getRowValueAt(rowIndex))
+                if (!onesStarted && column.GetRowValueAt(rowIndex) && !columnsToDelete.Contains(columnIndex))
                 {
                     onesStarted = true;
                 }
-                else if (onesStarted && !column.getRowValueAt(rowIndex) && !columnsToDelete.Contains(columnIndex) && onesInRow>0) 
+                else if (onesStarted && !column.GetRowValueAt(rowIndex) && !columnsToDelete.Contains(columnIndex) && onesInRow > 0)
                 {
                     columnsToDelete.Add(columnIndex);
                 }
-                if (column.getRowValueAt(rowIndex))
+                if (column.GetRowValueAt(rowIndex))
                 {
                     onesInRow--;
                 }
+            }
+        }
+
+        private void RemoveSingleOnes(int rowIndex, int onesInRow)
+        {
+            List<int> singleOnesPositions = new List<int>();
+            List<int> startingOnesPosition = new List<int>();
+            List<int> endingOnesPosition = new List<int>();
+            GetStartingBlocksList(rowIndex, ref startingOnesPosition, ref endingOnesPosition);
+            bool previousOne = false;
+            for(int index =0; index<columnsPermutation.Count-1; index++)
+            {
+                int column1Index = columnsPermutation.ElementAt(index);
+                int column2Index = columnsPermutation.ElementAt(index + 1);
+                Column column1 = algorithmObject.GetColumnObjectAt(column1Index);
+                Column column2 = algorithmObject.GetColumnObjectAt(column2Index);
+                if (IsSingleOne(rowIndex, onesInRow, startingOnesPosition, endingOnesPosition, previousOne, column1Index, column1, column2)) //wyklucza usunięcie wszystkich jedynek z wiersza
+                {
+                    singleOnesPositions.Add(column1Index);
+                }
+
+                if (column1.GetRowValueAt(rowIndex))
+                {
+                    previousOne = true;
+                    onesInRow--;
+                }
+                else
+                    previousOne = false;
+            }
+            foreach(int one in singleOnesPositions)
+            {
+                if (!columnsToDelete.Contains(one))
+                {
+                    columnsToDelete.Add(one);
+                }
+            }
+        }
+
+        private bool IsSingleOne(int rowIndex, int onesInRow, List<int> startingOnesPosition, List<int> endingOnesPosition, bool previousOne, int column1Index, Column column1, Column column2)
+        {
+            return column1.GetRowValueAt(rowIndex) && !column2.GetRowValueAt(rowIndex) && !previousOne && !AfterOrBeforeBlock(column1Index, startingOnesPosition, endingOnesPosition) && onesInRow > 1;
+        }
+
+        private bool AfterOrBeforeBlock(int column1Index, List<int> startingOnesPosition, List<int> endingOnesPosition)
+        {
+            int indexOfColumn = columnsPermutation.IndexOf(column1Index);
+            if (startingOnesPosition.Contains(indexOfColumn + 2) || endingOnesPosition.Contains(indexOfColumn - 2))
+                return true;
+            else
+                return false;
+        }
+
+        private void GetStartingBlocksList(int rowIndex, ref List<int> start, ref List<int> end)
+        {
+            int ones = 0;
+            for(int i=0; i<columnsPermutation.Count; i++)
+            {
+                int columnNumber = columnsPermutation.ElementAt(i);
+                Column column = algorithmObject.GetColumnObjectAt(columnNumber);
+                if (column.GetRowValueAt(rowIndex)){
+                    ones++;
+                } else if (ones >= 2)
+                {
+                    start.Add(i - ones);
+                    end.Add(i);
+                    ones = 0;
+                } else
+                    ones = 0;
             }
         }
 
@@ -91,59 +160,25 @@ namespace Zaawansowane_programowanie
                     index1 = rand.Next(columnsPermutation.Count);
                     index2 = rand.Next(columnsPermutation.Count);
                 }
-                CollectionActions.Swap(columnsPermutation, index1, index2);
+                new CollectionActions().Swap(ref columnsPermutation, index1, index2);
             }
         }
 
-        /*
-        public int CheckSolution()
+        internal void MutateFragment(int startingPosition, int mutatedIntervalSize)
         {
-            //sprawdzenie consecutive ones
-            for(int i =0; i<columnsPermutation.Count - 1; i++) //porownujemy i-ty oraz i+1 element
+            List<int> mutatedColumns = columnsPermutation.GetRange(startingPosition, mutatedIntervalSize);
+            new CollectionActions().Shuffle(ref mutatedColumns);
+            List<int> newPermutation = new List<int>();
+            for(int i =0; i<columnsPermutation.Count; i++)
             {
-                Column column1 =algorithmObject.GetColumnObjectAt(columnsPermutation[i]);
-                Column column2 = algorithmObject.GetColumnObjectAt(columnsPermutation[i+1]);
-                int secColIndex = columnsPermutation[i + 1];
-                if(!areConsecutiveColumns(column1, column2))
+                if (i >= startingPosition && i < startingPosition + mutatedIntervalSize)
                 {
-                    CheckThirdColumn(i, column1, column2);
-                }
-
+                    newPermutation.Add(mutatedColumns.ElementAt(i-startingPosition));
+                } else
+                    newPermutation.Add(columnsPermutation.ElementAt(i));
             }
-            return SolutionValue;
+            columnsPermutation = newPermutation;
         }
-        
-        private void CheckThirdColumn(int i, Column column1, Column column2)
-        {
-            /*Jeżeli nie ma przejścia z kolumny a do b to sprawdzamy, czy jest przejście 
-             * z kolumny b do c i z a do c, żeby móc wybrać, czy usunąć kolumnę, a, b czy obie. 
-             *
-             */
-        /*
-                    Column column3;
-                    try
-                    {
-                        column3 = algorithmObject.GetColumnObjectAt(columnsPermutation[i + 2]);
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-                    if (areConsecutiveColumns(column1, column3))
-                    {
-                        columnsToDelete.Add(i + 1); //Kolumna 2
-                    }
-                    else if (areConsecutiveColumns(column2, column3))
-                    {
-                        columnsToDelete.Add(i);
-                    }
-                    else //Czy na pewno usunac obie???
-                    {
-                        columnsToDelete.Add(i);
-                        columnsToDelete.Add(i + 1);
-                    }
-                }
-            */
 
     }
 }

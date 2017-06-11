@@ -35,6 +35,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.saveButton = new System.Windows.Forms.Button();
             this.fragmentsLabel = new System.Windows.Forms.Label();
             this.samplesLabel = new System.Windows.Forms.Label();
@@ -45,20 +46,17 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.generatedInstanceLabel = new System.Windows.Forms.Label();
             this.generateAndSaveButton = new System.Windows.Forms.Button();
             this.toSaveCheckBox = new System.Windows.Forms.CheckBox();
             this.button5 = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownErrorCount = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMFragments = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownNSamples = new System.Windows.Forms.NumericUpDown();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -66,17 +64,16 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel3.SuspendLayout();
+            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fragmentsCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.samplesCount)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownErrorCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMFragments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNSamples)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -144,7 +141,7 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.saveButton);
+            this.panel3.Controls.Add(this.panel5);
             this.panel3.Controls.Add(this.fragmentsLabel);
             this.panel3.Controls.Add(this.samplesLabel);
             this.panel3.Controls.Add(this.clearBlankButton);
@@ -157,9 +154,18 @@
             this.panel3.Size = new System.Drawing.Size(239, 494);
             this.panel3.TabIndex = 0;
             // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.saveButton);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel5.Location = new System.Drawing.Point(0, 394);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(239, 100);
+            this.panel5.TabIndex = 7;
+            // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(6, 422);
+            this.saveButton.Location = new System.Drawing.Point(3, 17);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(230, 67);
             this.saveButton.TabIndex = 1;
@@ -237,6 +243,7 @@
             this.loadInstanceButton.TabIndex = 1;
             this.loadInstanceButton.Text = "Załaduj wygenerowaną instancję";
             this.loadInstanceButton.UseVisualStyleBackColor = true;
+            this.loadInstanceButton.Click += new System.EventHandler(this.loadInstanceButton_Click);
             // 
             // tabPage2
             // 
@@ -255,24 +262,34 @@
             this.panel7.Controls.Add(this.panel4);
             this.panel7.Controls.Add(this.button5);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(3, 397);
+            this.panel7.Location = new System.Drawing.Point(3, 374);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(904, 100);
+            this.panel7.Size = new System.Drawing.Size(904, 123);
             this.panel7.TabIndex = 8;
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.generatedInstanceLabel);
             this.panel4.Controls.Add(this.generateAndSaveButton);
             this.panel4.Controls.Add(this.toSaveCheckBox);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel4.Location = new System.Drawing.Point(675, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(229, 100);
+            this.panel4.Size = new System.Drawing.Size(229, 123);
             this.panel4.TabIndex = 8;
+            // 
+            // generatedInstanceLabel
+            // 
+            this.generatedInstanceLabel.AutoSize = true;
+            this.generatedInstanceLabel.Location = new System.Drawing.Point(14, 0);
+            this.generatedInstanceLabel.Name = "generatedInstanceLabel";
+            this.generatedInstanceLabel.Size = new System.Drawing.Size(96, 17);
+            this.generatedInstanceLabel.TabIndex = 9;
+            this.generatedInstanceLabel.Text = "Brak instancji.";
             // 
             // generateAndSaveButton
             // 
-            this.generateAndSaveButton.Location = new System.Drawing.Point(16, 37);
+            this.generateAndSaveButton.Location = new System.Drawing.Point(17, 60);
             this.generateAndSaveButton.Name = "generateAndSaveButton";
             this.generateAndSaveButton.Size = new System.Drawing.Size(196, 58);
             this.generateAndSaveButton.TabIndex = 0;
@@ -285,7 +302,7 @@
             this.toSaveCheckBox.AutoSize = true;
             this.toSaveCheckBox.Checked = true;
             this.toSaveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toSaveCheckBox.Location = new System.Drawing.Point(16, 10);
+            this.toSaveCheckBox.Location = new System.Drawing.Point(17, 37);
             this.toSaveCheckBox.Name = "toSaveCheckBox";
             this.toSaveCheckBox.Size = new System.Drawing.Size(125, 21);
             this.toSaveCheckBox.TabIndex = 7;
@@ -294,162 +311,102 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(8, 37);
+            this.button5.Location = new System.Drawing.Point(8, 60);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(101, 58);
             this.button5.TabIndex = 2;
-            this.button5.Text = "Anuluj";
+            this.button5.Text = "Zamknij";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.label9);
-            this.panel6.Controls.Add(this.numericUpDown7);
-            this.panel6.Controls.Add(this.label7);
             this.panel6.Controls.Add(this.label8);
-            this.panel6.Controls.Add(this.numericUpDown5);
-            this.panel6.Controls.Add(this.numericUpDown6);
+            this.panel6.Controls.Add(this.numericUpDownErrorCount);
             this.panel6.Controls.Add(this.label5);
             this.panel6.Controls.Add(this.label6);
-            this.panel6.Controls.Add(this.numericUpDown4);
-            this.panel6.Controls.Add(this.numericUpDown3);
+            this.panel6.Controls.Add(this.numericUpDownMFragments);
+            this.panel6.Controls.Add(this.numericUpDownNSamples);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(3, 3);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(904, 494);
             this.panel6.TabIndex = 7;
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(2, 164);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(213, 17);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "Maksymalna gęstość próbek (%)";
-            // 
-            // numericUpDown7
-            // 
-            this.numericUpDown7.Location = new System.Drawing.Point(327, 164);
-            this.numericUpDown7.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDown7.TabIndex = 15;
-            this.numericUpDown7.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(5, 125);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(198, 17);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Minimalna gęstość próbek (%)";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(4, 87);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(97, 17);
+            this.label8.Size = new System.Drawing.Size(158, 17);
             this.label8.TabIndex = 13;
-            this.label8.Text = "Liczba błędów";
+            this.label8.Text = "Liczba losowych błędów";
             // 
-            // numericUpDown5
+            // numericUpDownErrorCount
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(327, 125);
-            this.numericUpDown5.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDown5.TabIndex = 12;
-            this.numericUpDown5.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDown6
-            // 
-            this.numericUpDown6.Location = new System.Drawing.Point(327, 87);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDown6.TabIndex = 11;
+            this.numericUpDownErrorCount.Location = new System.Drawing.Point(327, 87);
+            this.numericUpDownErrorCount.Name = "numericUpDownErrorCount";
+            this.numericUpDownErrorCount.Size = new System.Drawing.Size(52, 22);
+            this.numericUpDownErrorCount.TabIndex = 11;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(5, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(155, 17);
+            this.label5.Size = new System.Drawing.Size(123, 17);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Liczba fragmentów (m):";
+            this.label5.Text = "Liczba próbek (n):";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(4, 11);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(123, 17);
+            this.label6.Size = new System.Drawing.Size(151, 17);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Liczba próbek (n):";
+            this.label6.Text = "Liczba framgentów (m)";
             // 
-            // numericUpDown4
+            // numericUpDownMFragments
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(327, 15);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
+            this.numericUpDownMFragments.Location = new System.Drawing.Point(327, 15);
+            this.numericUpDownMFragments.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
-            1,
+            this.numericUpDownMFragments.Minimum = new decimal(new int[] {
+            3,
             0,
             0,
             0});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDown4.TabIndex = 7;
-            this.numericUpDown4.Value = new decimal(new int[] {
-            1,
+            this.numericUpDownMFragments.Name = "numericUpDownMFragments";
+            this.numericUpDownMFragments.Size = new System.Drawing.Size(52, 22);
+            this.numericUpDownMFragments.TabIndex = 7;
+            this.numericUpDownMFragments.Value = new decimal(new int[] {
+            10,
             0,
             0,
             0});
             // 
-            // numericUpDown3
+            // numericUpDownNSamples
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(327, 50);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.numericUpDownNSamples.Location = new System.Drawing.Point(327, 50);
+            this.numericUpDownNSamples.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
-            1,
+            this.numericUpDownNSamples.Minimum = new decimal(new int[] {
+            3,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(52, 22);
-            this.numericUpDown3.TabIndex = 8;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            1,
+            this.numericUpDownNSamples.Name = "numericUpDownNSamples";
+            this.numericUpDownNSamples.Size = new System.Drawing.Size(52, 22);
+            this.numericUpDownNSamples.TabIndex = 8;
+            this.numericUpDownNSamples.Value = new decimal(new int[] {
+            10,
             0,
             0,
             0});
@@ -471,6 +428,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fragmentsCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.samplesCount)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -479,11 +437,9 @@
             this.panel4.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownErrorCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMFragments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNSamples)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -508,19 +464,17 @@
         private System.Windows.Forms.Button generateAndSaveButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
+        private System.Windows.Forms.NumericUpDown numericUpDownErrorCount;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.NumericUpDown numericUpDownMFragments;
+        private System.Windows.Forms.NumericUpDown numericUpDownNSamples;
         private System.Windows.Forms.CheckBox toSaveCheckBox;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Label generatedInstanceLabel;
+        private System.Windows.Forms.Panel panel5;
     }
 }

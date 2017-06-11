@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +52,9 @@
     </Compile>
     <Compile Include="AlgorithmForm.Designer.cs">
       <DependentUpon>AlgorithmForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AutomaticTests.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="CollectionActions.cs" />
     <Compile Include="Column.cs" />
@@ -71,6 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AlgorithmForm.resx">
       <DependentUpon>AlgorithmForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutomaticTests.resx">
+      <DependentUpon>AutomaticTests.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GeneratorForm.resx">
       <DependentUpon>GeneratorForm.cs</DependentUpon>
